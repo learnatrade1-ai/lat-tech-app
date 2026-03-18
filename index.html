@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAT Technician Pro</title>
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LAT Tech Pro">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:20px;color:#0f172a}
+.container{max-width:1200px;margin:auto}
+h1{margin:0 0 8px}
+p.sub{margin:0 0 18px;color:#475569}
+.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+button{padding:10px 16px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
+button.secondary{background:#e5e7eb;color:#111827}
+button.small{padding:8px 12px;font-size:14px}
+.workflow-list button{width:100%;text-align:left;margin-bottom:10px;background:#fff;color:#111827;border:1px solid #dbe4ee}
+.workflow-list button.active{background:#0f172a;color:#fff;border-color:#0f172a}
+.result{background:#e8f7ec;border:1px solid #b6e2c3;padding:15px;border-radius:8px}
+input,textarea,select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:10px;font-size:14px}
+textarea{min-height:96px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tab{background:#fff;color:#111827;border:1px solid #cbd5e1}
+.tab.active{background:#0f172a;color:#fff}
+.hidden{display:none}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #dbe4ee;font-size:12px;margin-right:8px;margin-bottom:8px}
+.progress{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:10px 0 16px}
+.progress div{height:100%;background:#0f172a}
+.list-item{border:1px solid #dbe4ee;border-radius:10px;padding:12px;background:#fff;margin-bottom:10px}
+.section-title{font-weight:700;margin:0 0 10px}
+.muted{color:#64748b;font-size:14px}
+.kpi{background:#f8fafc;border:1px solid #dbe4ee;border-radius:10px;padding:12px;margin-top:10px}
+</style>
+</head>
+<body>
+  if(state.tab==='install'){
+    const canPrompt = !!deferredInstallPrompt;
+    const isIOS = state.install.platform==='ios';
+    const isAndroid = state.install.platform==='android';
+    html=`
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card" style="padding:16px">
+          <div class="section-title">Install LAT Technician Pro</div>
+          <div class="list-item">Save this tool to your phone home screen for faster field access.</div>
+          <div class="list-item"><strong>Status:</strong> ${canPrompt ? 'Install prompt available on this device/browser.' : 'Manual add-to-home-screen instructions may be needed.'}</div>
+          <button onclick="installApp()">Install / Add to Home Screen</button>
+        </div>
+        <div class="card" style="padding:16px">
+          <div class="section-title">Phone Instructions</div>
+          ${isIOS ? `
+            <div class="list-item">On iPhone/iPad in Safari: tap Share, then choose <strong>Add to Home Screen</strong>.</div>
+            <div class="list-item">After adding, the app icon will open this tool directly from your home screen.</div>
+          ` : isAndroid ? `
+            <div class="list-item">On Android in Chrome: tap the browser menu, then choose <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</div>
+            <div class="list-item">If an install prompt appears, approve it to create an app-style shortcut.</div>
+          ` : `
+            <div class="list-item">Use your browser menu to look for <strong>Install App</strong>, <strong>Add to Home Screen</strong>, or <strong>Create Shortcut</strong>.</div>
+            <div class="list-item">Mobile browsers vary, but most support a home-screen shortcut for this app.</div>
+          `}
+          <div class="list-item">For full offline app behavior later, we can add a dedicated web app manifest and service worker.</div>
+        </div>
+      </div>`;
+  }
+    html=`
+      <div class="card" style="padding:16px">
+        <div class="section-title">Service Call Report</div>
+        <input placeholder="Technician name" value="${state.report.techName}" oninput="updateReport('techName',this.value)">
+        <input placeholder="Date" value="${state.report.date}" oninput="updateReport('date',this.value)">
+        <input placeholder="Customer" value="${state.report.customer}" oninput="updateReport('customer',this.value)">
+        <input placeholder="Store" value="${state.report.store}" oninput="updateReport('store',this.value)">
+        <input placeholder="Machine model" value="${state.report.model}" oninput="updateReport('model',this.value)">
+        <input placeholder="Serial" value="${state.report.serial}" oninput="updateReport('serial',this.value)">
+        <textarea placeholder="Complaint" oninput="updateReport('complaint',this.value)">${state.report.complaint}</textarea>
+        <textarea placeholder="Diagnosis" oninput="updateReport('diagnosis',this.value)">${state.report.diagnosis}</textarea>
+        <textarea placeholder="Resolution" oninput="updateReport('resolution',this.value)">${state.report.resolution}</textarea>
+        <textarea placeholder="Parts used" oninput="updateReport('partsUsed',this.value)">${state.report.partsUsed}</textarea>
+        <textarea placeholder="Readings / notes" oninput="updateReport('readings',this.value)">${state.report.readings}</textarea>
+        <button onclick="exportReport()">Download PDF Report</button>
+      </div>`;
+  }
+
+  document.getElementById('content').innerHTML=html;
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  render();
+});
+
+document.getElementById('searchInput').addEventListener('input',e=>{state.query=e.target.value; render();});
+document.getElementById('machineFilter').addEventListener('change',e=>{state.filter=e.target.value; render();});
+
+function render(){
+  const visible=filteredWorkflows();
+  if(!visible.some(w=>w.id===state.selectedId) && visible[0]) state.selectedId=visible[0].id;
+  renderWorkflowList();
+  renderTabs();
+  renderContent();
+}
+
+render();
+</script>
+</body>
+</html>
