@@ -4,259 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAT Technician Pro</title>
-
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LAT Tech Pro">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f5f7fb;
-}
-
-header {
-  background: #0f172a;
-  color: white;
-  padding: 16px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.container {
-  padding: 16px;
-}
-
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.tab {
-  padding: 10px 14px;
-  background: #e2e8f0;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.tab.active {
-  background: #0f172a;
-  color: white;
-}
-
-.card {
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-}
-
-button {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
-  background: #0f172a;
-  color: white;
-  cursor: pointer;
-}
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0;padding:20px;color:#0f172a}
+.container{max-width:1200px;margin:auto}
+h1{margin:0 0 8px}
+p.sub{margin:0 0 18px;color:#475569}
+.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+button{padding:10px 16px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
+button.secondary{background:#e5e7eb;color:#111827}
+button.small{padding:8px 12px;font-size:14px}
+.workflow-list button{width:100%;text-align:left;margin-bottom:10px;background:#fff;color:#111827;border:1px solid #dbe4ee}
+.workflow-list button.active{background:#0f172a;color:#fff;border-color:#0f172a}
+.result{background:#e8f7ec;border:1px solid #b6e2c3;padding:15px;border-radius:8px}
+input,textarea,select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:10px;font-size:14px}
+textarea{min-height:96px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tab{background:#fff;color:#111827;border:1px solid #cbd5e1}
+.tab.active{background:#0f172a;color:#fff}
+.hidden{display:none}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #dbe4ee;font-size:12px;margin-right:8px;margin-bottom:8px}
+.progress{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:10px 0 16px}
+.progress div{height:100%;background:#0f172a}
+.list-item{border:1px solid #dbe4ee;border-radius:10px;padding:12px;background:#fff;margin-bottom:10px}
+.section-title{font-weight:700;margin:0 0 10px}
+.muted{color:#64748b;font-size:14px}
+.kpi{background:#f8fafc;border:1px solid #dbe4ee;border-radius:10px;padding:12px;margin-top:10px}
 </style>
 </head>
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  render();
+});
 
-<body>
+document.getElementById('searchInput').addEventListener('input',e=>{state.query=e.target.value; render();});
+document.getElementById('machineFilter').addEventListener('change',e=>{state.filter=e.target.value; render();});
 
-<header>
-LAT Technician Pro — Field Service App
-</header>
-
-<div class="container">
-
-<div class="tabs" id="tabs"></div>
-
-<div id="content"></div>
-
-</div>
-
-<script>
-const tabs = [
-"Workflow",
-"Checklist",
-"Brix Calc",
-"CO2 Tool",
-"Ice Diag",
-"Valve ID",
-"Parts Lookup",
-"Hoshizaki Beeps",
-"Manitowoc",
-"Scotsman",
-"Refrig Ref",
-"Filter Calc",
-"Notes",
-"Report"
-];
-
-let activeTab = "Workflow";
-
-function renderTabs() {
-  const tabContainer = document.getElementById("tabs");
-  tabContainer.innerHTML = "";
-
-  tabs.forEach(tab => {
-    const btn = document.createElement("div");
-    btn.className = "tab " + (tab === activeTab ? "active" : "");
-    btn.innerText = tab;
-    btn.onclick = () => {
-      activeTab = tab;
-      render();
-    };
-    tabContainer.appendChild(btn);
-  });
-}
-
-function renderContent() {
-  const content = document.getElementById("content");
-
-  if (activeTab === "Workflow") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Guided Troubleshooting</h3>
-      <p>No carbonation issue flow</p>
-      <button onclick="alert('Step 1: Check CO2 tank')">Start</button>
-    </div>`;
-  }
-
-  if (activeTab === "Checklist") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Service Checklist</h3>
-      <ul>
-        <li>✔ Check CO2 pressure</li>
-        <li>✔ Inspect water filter</li>
-        <li>✔ Verify Brix</li>
-      </ul>
-    </div>`;
-  }
-
-  if (activeTab === "Brix Calc") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Brix Calculator</h3>
-      <input placeholder="Water weight">
-      <input placeholder="Syrup weight">
-      <button>Calculate</button>
-    </div>`;
-  }
-
-  if (activeTab === "CO2 Tool") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>CO2 Diagnostics</h3>
-      <p>Check regulator pressure and tank levels.</p>
-    </div>`;
-  }
-
-  if (activeTab === "Ice Diag") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Ice Machine Diagnostics</h3>
-      <p>Freeze / harvest troubleshooting.</p>
-    </div>`;
-  }
-
-  if (activeTab === "Valve ID") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Valve Identification</h3>
-      <p>UF1 / LEV / Lancer valves reference.</p>
-    </div>`;
-  }
-
-  if (activeTab === "Parts Lookup") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Parts Lookup</h3>
-      <input placeholder="Enter model number">
-    </div>`;
-  }
-
-  if (activeTab === "Hoshizaki Beeps") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Hoshizaki Error Beeps</h3>
-      <p>2 beeps = freeze issue</p>
-      <p>3 beeps = harvest issue</p>
-    </div>`;
-  }
-
-  if (activeTab === "Manitowoc") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Manitowoc Diagnostics</h3>
-      <p>Freeze too long / harvest too long errors.</p>
-    </div>`;
-  }
-
-  if (activeTab === "Scotsman") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Scotsman Diagnostics</h3>
-      <p>Check water level sensor and bin control.</p>
-    </div>`;
-  }
-
-  if (activeTab === "Refrig Ref") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Refrigeration Reference</h3>
-      <p>Low side / high side troubleshooting.</p>
-    </div>`;
-  }
-
-  if (activeTab === "Filter Calc") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Filter Calculator</h3>
-      <input placeholder="GPM">
-      <input placeholder="Capacity">
-      <button>Calculate</button>
-    </div>`;
-  }
-
-  if (activeTab === "Notes") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Notes</h3>
-      <textarea placeholder="Enter notes"></textarea>
-    </div>`;
-  }
-
-  if (activeTab === "Report") {
-    content.innerHTML = `
-    <div class="card">
-      <h3>Service Report</h3>
-      <input placeholder="Technician Name">
-      <input placeholder="Date">
-      <input placeholder="Customer">
-      <textarea placeholder="Work performed"></textarea>
-      <button onclick="alert('PDF export coming next upgrade')">Export</button>
-    </div>`;
-  }
-}
-
-function render() {
+function render(){
+  const visible=filteredWorkflows();
+  if(!visible.some(w=>w.id===state.selectedId) && visible[0]) state.selectedId=visible[0].id;
+  renderWorkflowList();
   renderTabs();
   renderContent();
 }
 
 render();
 </script>
-
 </body>
 </html>
