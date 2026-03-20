@@ -1,6 +1,6 @@
 {
   "name": "LAT Technician Pro",
-  "short_name": "LAT Pro",
+  "short_name": "LAT Technician Pro",
   "start_url": "/lat-tech-app/",
   "display": "standalone",
   "background_color": "#0f172a",
