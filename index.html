@@ -868,5 +868,32 @@ if ('serviceWorker' in navigator) {
   <script>
 
 </script>
+  <script>
+// STEP 1: Auto-fill tech name
+function saveTechName() {
+  const tech = document.getElementById('reportTech')?.value || '';
+  localStorage.setItem('latTechName', tech);
+}
+
+function loadTechName() {
+  const saved = localStorage.getItem('latTechName') || '';
+  const techField = document.getElementById('reportTech');
+  if (techField && saved && !techField.value) {
+    techField.value = saved;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadTechName();
+
+  const techField = document.getElementById('reportTech');
+  if (techField) {
+    techField.addEventListener('change', saveTechName);
+    techField.addEventListener('blur', saveTechName);
+  }
+});
+
+</script>
+
 </body>
 </html>
