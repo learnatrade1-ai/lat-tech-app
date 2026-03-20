@@ -865,34 +865,37 @@ if ('serviceWorker' in navigator) {
   <!-- SERVICE REPORT SECTION -->
 
 
-  <script>
-
-</script>
-  <script>
+ <script>
 // STEP 1: Auto-fill tech name
 function saveTechName() {
-  const tech = document.getElementById('reportTech')?.value || '';
+  const techField = document.getElementById('reportTech');
+  const tech = techField ? techField.value : '';
   localStorage.setItem('latTechName', tech);
 }
 
-function loadTechName() {
+function loadTechNameIntoField() {
   const saved = localStorage.getItem('latTechName') || '';
   const techField = document.getElementById('reportTech');
-  if (techField && saved && !techField.value) {
-    techField.value = saved;
+
+  if (techField) {
+    if (saved && !techField.value) {
+      techField.value = saved;
+    }
+
+    if (!techField.dataset.boundTechName) {
+      techField.addEventListener('change', saveTechName);
+      techField.addEventListener('blur', saveTechName);
+      techField.dataset.boundTechName = 'true';
+    }
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadTechName();
-
-  const techField = document.getElementById('reportTech');
-  if (techField) {
-    techField.addEventListener('change', saveTechName);
-    techField.addEventListener('blur', saveTechName);
-  }
+  loadTechNameIntoField();
+  setTimeout(loadTechNameIntoField, 300);
+  setTimeout(loadTechNameIntoField, 800);
+  setTimeout(loadTechNameIntoField, 1500);
 });
-
 </script>
 
 </body>
