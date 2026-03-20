@@ -893,35 +893,7 @@ if ('serviceWorker' in navigator) {
   </div>
 </section>
   <script>
-function generateServiceReportPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
 
-  const customer = document.getElementById('reportCustomer').value;
-  const date = document.getElementById('reportDate').value;
-  const issue = document.getElementById('reportIssue').value;
-  const work = document.getElementById('reportWork').value;
-
-  let y = 20;
-
-  doc.setFontSize(16);
-  doc.text('LAT Technician Pro - Service Report', 14, y);
-
-  y += 10;
-  doc.setFontSize(12);
-
-doc.text(`Customer: ${customer}`, 14, y); y += 8;
-doc.text(`Date: ${date}`, 14, y); y += 10;
-
-
-  doc.text('Issue Reported:', 14, y); y += 6;
-  doc.text(doc.splitTextToSize(issue, 180), 14, y); y += 20;
-
-  doc.text('Work Performed:', 14, y); y += 6;
-  doc.text(doc.splitTextToSize(work, 180), 14, y);
-
-  doc.save('LAT-Service-Report.pdf');
-}
 </script>
 </body>
 </html>
