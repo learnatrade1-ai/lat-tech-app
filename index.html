@@ -440,13 +440,9 @@
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
             ${!finalResult ? `
-             <div class="mt-4 strong">
+            <div class="mt-4 strong">
   ${current.q}
-  ${current.img ? `
-    <div style="margin-top:10px;">
-      <img src="${current.img}" style="max-width:220px;border-radius:8px;border:1px solid #ccc;">
-    </div>
-  ` : ""}
+  ${current.img ? `<img src="${current.img}" style="max-width:220px;">` : ""}
 </div>
               <div class="mt-4" style="display:flex;gap:12px;flex-wrap:wrap;">
                 <button class="btn btn-primary" onclick="answerFlow('yes')">Yes</button>
