@@ -108,65 +108,10 @@
   </div>
 
   <script>
-  const workflows = [
-  {
-    id:"fountain-no-carbonation",
-    machineType:"Fountain Soda",
-    issue:"No carbonation",
-    severity:"High",
-    eta:"10-20 min",
-    symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"],
-    tools:["Pressure gauges","Leak detector","Basic hand tools"],
-    parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"],
-    notes:"Water in the CO2 line usually indicates a failed check valve.",
-
-    steps: [
-     const workflows = [
-  { 
-    id:"fountain-no-carbonation",
-    machineType:"Fountain Soda",
-    issue:"No carbonation",
-    severity:"High",
-    eta:"10-20 min",
-    symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"],
-    tools:["Pressure gauges","Leak detector","Basic hand tools"],
-    parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"],
-    notes:"Water in the CO2 line usually indicates a failed check valve.",
-
-    steps: [
-      { q:"Is the CO2 tank open and not empty?", img:"https://via.placeholder.com/220", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
-      { q:"Is regulator output within target range?", yes:2, no:"Adjust or replace the regulator." },
-      { q:"Is the carbonator pump running on demand?", yes:3, no:"Check pump power, overload, and pressure switch." },
-      { q:"Is water backing into the CO2 line?", yes:"Replace the carbonator check valve and inspect fittings for leakage.", no:4 },
-      { q:"Are drinks still flat after supply checks?", yes:"Inspect diffuser, carbonation tank leaks, and water-to-syrup balance.", no:"System restored. Verify carbonation at the valve." }
-    ]
-  },
-
-  { id:"fountain-off-ratio", machineType:"Fountain Soda", issue:"Off ratio or Brix", severity:"Medium", eta:"10-15 min", symptoms:["Too sweet","Too weak","Inconsistent flavor","Customer taste complaints"], tools:["Brix cup","Stopwatch","Ratio chart"], parts:["Syrup pump","Water regulator","Valve diffuser","Nozzle"], notes:"Always take several Brix readings after making an adjustment.", steps:[
-    { q:"Is water pressure within spec?", yes:1, no:"Adjust the water regulator or correct the restriction." },
-    { q:"Is the syrup box empty or tubing kinked?", yes:"Replace the BIB or correct the syrup line issue.", no:2 },
-    { q:"Is the syrup pump operating correctly?", yes:3, no:"Repair the gas supply or replace the syrup pump." },
-    { q:"Is the valve clean?", yes:"Adjust Brix ratio and verify with multiple pours.", no:"Clean nozzle, diffuser, and valve body." }
-  ]},
-
-  { id:"fountain-water-in-co2", machineType:"Fountain Soda", issue:"Water in CO2 line", severity:"High", eta:"10-15 min", symptoms:["Water visible in gas tubing","Weak carbonation","Regulator instability"], tools:["Basic hand tools","Pressure gauge"], parts:["Carbonator check valve","Regulator","Tubing"], notes:"This often points to a failed check valve or improper backflow protection.", steps:[
-    { q:"Is there visible water in the CO2 line?", yes:1, no:"Inspect regulator and gas path for pressure instability instead." },
-    { q:"Has the carbonator check valve been inspected?", yes:2, no:"Replace the check valve first, then purge and retest." },
-    { q:"Did water reach the regulator?", yes:"Inspect or replace the regulator if contaminated by water.", no:"Purge line, verify no backflow, and confirm carbonation." }
-  ]}
-];
-      q:"Is regulator output within target range?",
-      yes:2,
-      no:"Adjust or replace the regulator."
-    },
-
-    { 
-      q:"Is the carbonator pump running on demand?",
-      yes:3,
-      no:"Check pump power, overload, and pressure switch."
-    }
-  }
-];
+  
+    const workflows = [
+      { id:"fountain-no-carbonation", machineType:"Fountain Soda", issue:"No carbonation", severity:"High", eta:"10-20 min", symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"], tools:["Pressure gauges","Leak detector","Basic hand tools"], parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"], notes:"Water in the CO2 line usually indicates a failed check valve.", steps:[
+        { q:"Is the CO2 tank open and not empty?", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
         { q:"Is regulator output within target range?", yes:2, no:"Adjust or replace the regulator." },
         { q:"Is the carbonator pump running on demand?", yes:3, no:"Check pump power, overload, and pressure switch." },
         { q:"Is water backing into the CO2 line?", yes:"Replace the carbonator check valve and inspect fittings for leakage.", no:4 },
@@ -501,14 +446,7 @@
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
             ${!finalResult ? `
-            <div class="mt-4 strong">
-  ${current.q}
-  ${current.img ? `
-    <div style="margin-top:10px;">
-      <img src="${current.img}" style="max-width:220px;border-radius:8px;border:1px solid #ccc;">
-    </div>
-  ` : ""}
-</div>
+              <div class="mt-4 strong">${current.q}</div>
               <div class="mt-4" style="display:flex;gap:12px;flex-wrap:wrap;">
                 <button class="btn btn-primary" onclick="answerFlow('yes')">Yes</button>
                 <button class="btn" onclick="answerFlow('no')">No</button>
