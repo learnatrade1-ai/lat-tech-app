@@ -108,10 +108,46 @@
   </div>
 
   <script>
-  
-    const workflows = [
-      { id:"fountain-no-carbonation", machineType:"Fountain Soda", issue:"No carbonation", severity:"High", eta:"10-20 min", symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"], tools:["Pressure gauges","Leak detector","Basic hand tools"], parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"], notes:"Water in the CO2 line usually indicates a failed check valve.", steps:[
-        { q:"Is the CO2 tank open and not empty?", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
+  const workflows = [
+  {
+    id:"fountain-no-carbonation",
+    machineType:"Fountain Soda",
+    issue:"No carbonation",
+    severity:"High",
+    eta:"10-20 min",
+    symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"],
+    tools:["Pressure gauges","Leak detector","Basic hand tools"],
+    parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"],
+    notes:"Water in the CO2 line usually indicates a failed check valve.",
+
+    steps: [
+      {
+        q:"Is the CO2 tank open and not empty?",
+        img:"https://via.placeholder.com/220",
+        yes:1,
+        no:"Restore CO2 supply or replace the empty cylinder."
+      },
+      {
+        q:"Is regulator output within target range?",
+        yes:2,
+        no:"Adjust or replace the regulator."
+      }
+    ]
+  }
+];
+
+      q:"Is regulator output within target range?",
+      yes:2,
+      no:"Adjust or replace the regulator."
+    },
+
+    { 
+      q:"Is the carbonator pump running on demand?",
+      yes:3,
+      no:"Check pump power, overload, and pressure switch."
+    }
+  }
+];
         { q:"Is regulator output within target range?", yes:2, no:"Adjust or replace the regulator." },
         { q:"Is the carbonator pump running on demand?", yes:3, no:"Check pump power, overload, and pressure switch." },
         { q:"Is water backing into the CO2 line?", yes:"Replace the carbonator check valve and inspect fittings for leakage.", no:4 },
@@ -446,7 +482,14 @@
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
             ${!finalResult ? `
-              <div class="mt-4 strong">${current.q}</div>
+            <div class="mt-4 strong">
+  ${current.q}
+  ${current.img ? `
+    <div style="margin-top:10px;">
+      <img src="${current.img}" style="max-width:220px;border-radius:8px;border:1px solid #ccc;">
+    </div>
+  ` : ""}
+</div>
               <div class="mt-4" style="display:flex;gap:12px;flex-wrap:wrap;">
                 <button class="btn btn-primary" onclick="answerFlow('yes')">Yes</button>
                 <button class="btn" onclick="answerFlow('no')">No</button>
