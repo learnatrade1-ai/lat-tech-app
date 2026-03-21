@@ -428,13 +428,7 @@
       doc.save('LAT-service-report.pdf');
     }
 
-    function renderContent() {
-      const w = currentWorkflow();
-      const finalResult = state.history.length && state.history[state.history.length - 1].result;
-      const current = w.steps[state.stepIndex];
-      const progress = finalResult ? 100 : Math.round(((state.stepIndex + 1) / w.steps.length) * 100);
-      let html = '';
-
+  renderContent()
       if (state.tab === 'workflow') {
         html = `
           <div class="mb-3">
@@ -446,7 +440,14 @@
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
             ${!finalResult ? `
-              <div class="mt-4 strong">${current.q}</div>
+             <div class="mt-4 strong">
+  ${current.q}
+  ${current.img ? `
+    <div style="margin-top:10px;">
+      <img src="${current.img}" style="max-width:220px;border-radius:8px;border:1px solid #ccc;">
+    </div>
+  ` : ""}
+</div>
               <div class="mt-4" style="display:flex;gap:12px;flex-wrap:wrap;">
                 <button class="btn btn-primary" onclick="answerFlow('yes')">Yes</button>
                 <button class="btn" onclick="answerFlow('no')">No</button>
