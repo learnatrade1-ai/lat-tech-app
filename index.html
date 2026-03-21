@@ -108,6 +108,7 @@
   </div>
 
   <script>
+  
     const workflows = [
       { id:"fountain-no-carbonation", machineType:"Fountain Soda", issue:"No carbonation", severity:"High", eta:"10-20 min", symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"], tools:["Pressure gauges","Leak detector","Basic hand tools"], parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"], notes:"Water in the CO2 line usually indicates a failed check valve.", steps:[
         { q:"Is the CO2 tank open and not empty?", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
