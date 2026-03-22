@@ -124,8 +124,19 @@ const workflows = [
     { q:"Is regulator output within target range?", img:"CO2-Regulator.jpg", yes:2, no:"Adjust or replace the regulator." },
     { q:"Is the carbonator pump running on demand?", img:"Carbonator-Pump.jpg", yes:3, no:"Check pump power, overload, and pressure switch." },
     { q:"Is water backing into the CO2 line?", img:"Carbonator-Check-Valve.jpg", yes:"Replace the carbonator check valve and inspect fittings for leakage.", no:4 },
-    { q:"Are drinks still flat after supply checks?", img:"Carbonator-Check-Valve.jpg", yes:"Inspect diffuser, carbonation tank leaks, and water-to-syrup balance.", no:"System restored. Verify carbonation at the valve." }
-},
+    { q:"Are drinks still flat after supply checks?", yes:"Inspect diffuser, carbonation tank leaks, and water-to-syrup balance.", no:"System restored. Verify carbonation at the valve." }
+      ]
+    },
+    { id:"fountain-off-ratio", machineType:"Fountain Soda", issue:"Off ratio or Brix", severity:"Medium", eta:"10-15 min", symptoms:["Too sweet","Too weak","Inconsistent flavor","Customer taste complaints"], tools:["Brix cup","Stopwatch","Ratio chart"], parts:["Syrup pump","Water regulator","Valve diffuser","Nozzle"], notes:"Always take several Brix readings after making an adjustment.", steps:[
+        { q:"Is water pressure within spec?", yes:1, no:"Adjust the water regulator or correct the restriction." },
+        { q:"Is the syrup box empty or tubing kinked?", yes:"Replace the BIB or correct the syrup line issue.", no:2 },
+        { q:"Is the syrup pump operating correctly?", yes:3, no:"Repair the gas supply or replace the syrup pump." },
+        { q:"Is the valve clean?", yes:"Adjust Brix ratio and verify with multiple pours.", no:"Clean nozzle, diffuser, and valve body." }
+    { id:"fountain-off-ratio", machineType:"Fountain Soda", issue:"Off ratio or Brix", severity:"Medium", eta:"10-15 min", symptoms:["Too sweet","Too weak","Inconsistent flavor","Customer taste complaints"], tools:["Brix cup","Stopwatch","Ratio chart"], parts:["Syrup pump","Water regulator","Valve diffuser","Nozzle"], notes:"Always take several Brix readings after making an adjustment.", steps:[
+        { q:"Is water pressure within spec?", yes:1, no:"Adjust the water regulator or correct the restriction." },
+        { q:"Is the syrup box empty or tubing kinked?", yes:"Replace the BIB or correct the syrup line issue.", no:2 },
+        { q:"Is the syrup pump operating correctly?", yes:3, no:"Repair the gas supply or replace the syrup pump." },
+        { q:"Is the valve clean?", yes:"Adjust Brix ratio and verify with multiple pours.", no:"Clean nozzle, diffuser, and valve body." }
     
       { id:"fountain-off-ratio", machineType:"Fountain Soda", issue:"Off ratio or Brix", severity:"Medium", eta:"10-15 min", symptoms:["Too sweet","Too weak","Inconsistent flavor","Customer taste complaints"], tools:["Brix cup","Stopwatch","Ratio chart"], parts:["Syrup pump","Water regulator","Valve diffuser","Nozzle"], notes:"Always take several Brix readings after making an adjustment.", steps:[
         { q:"Is water pressure within spec?", yes:1, no:"Adjust the water regulator or correct the restriction." },
