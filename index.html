@@ -122,7 +122,7 @@ const workflows = [
   steps: [
    { q:"Is the CO2 tank open and not empty?", img:"CO2-Tank.jpg", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
     { q:"Is regulator output within target range?", img:"CO2-Regulator.jpg", yes:2, no:"Adjust or replace the regulator." },
-    { q:"Is the carbonator pump running on demand?", yes:3, no:"Check pump power, overload, and pressure switch." },
+    { q:"Is the carbonator pump running on demand?", img:"Carbonator-Pump.jpg", yes:3, no:"Check pump power, overload, and pressure switch." },
     { q:"Is water backing into the CO2 line?", yes:"Replace the carbonator check valve and inspect fittings for leakage.", no:4 },
     { q:"Are drinks still flat after supply checks?", yes:"Inspect diffuser, carbonation tank leaks, and water-to-syrup balance.", no:"System restored. Verify carbonation at the valve." }
   ]
