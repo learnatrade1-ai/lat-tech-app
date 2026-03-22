@@ -120,7 +120,7 @@ const workflows = [
   parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"],
   notes:"Water in the CO2 line usually indicates a failed check valve.",
   steps: [
-   { q:"Is the CO2 tank open and not empty?",img:"images/workflows/images/CO2-Tank.jpg" , yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
+   { q:"Is the CO2 tank open and not empty?", img:"CO2-Tank.jpg", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
     { q:"Is regulator output within target range?", yes:2, no:"Adjust or replace the regulator." },
     { q:"Is the carbonator pump running on demand?", yes:3, no:"Check pump power, overload, and pressure switch." },
     { q:"Is water backing into the CO2 line?", yes:"Replace the carbonator check valve and inspect fittings for leakage.", no:4 },
