@@ -193,7 +193,6 @@ const workflows = [
       { q:"Did water reach the regulator?", yes:"Inspect or replace the regulator if contaminated by water.", no:"Purge line, verify no backflow, and confirm carbonation." }
     ]
   },
-  /*
   
       { id:"ice-harvest-too-long", machineType:"Ice Machine", issue:"Harvest too long", severity:"High", eta:"15-25 min", symptoms:["Long harvest cycle","Slab hangs","Fault code or freeze/harvest timeout"], tools:["Thermometer","Visual inspection","Amp clamp"], parts:["Hot gas valve","Water curtain","Thermistor"], notes:"Scale and weak hot gas valve performance are common root causes.", steps:[
         { q:"Is the evaporator or plate scaled?", yes:"Clean and descale the unit, then retest harvest.", no:1 },
@@ -224,18 +223,21 @@ const workflows = [
         { q:"Is the filter or RO system restricted?", yes:"Replace filter or RO cartridges, verify blend settings, and flush the system.", no:2 },
         { q:"Is the inlet solenoid opening during demand?", yes:3, no:"Check coil voltage, blockage, and valve condition." },
         { q:"Is the flowmeter registering?", yes:"Inspect pump and internal restrictions.", no:"Clean or replace the flowmeter." }
-      ]},
+      ]
+      },
       { id:"coffee-no-heat", machineType:"Coffee / Espresso", issue:"No heat or low brew temperature", severity:"High", eta:"15-25 min", symptoms:["Cold beverages","Ready light off","Slow recovery"], tools:["Multimeter","Thermometer"], parts:["Heating element","Hi-limit","Temperature probe","Relay"], notes:"Scale buildup and failing probes can mimic heater failure.", steps:[
         { q:"Does the unit have proper incoming power?", yes:1, no:"Restore correct electrical supply and verify voltage." },
         { q:"Is the hi-limit open or tripped?", yes:"Reset or replace the hi-limit after finding the root cause.", no:2 },
         { q:"Does the heating element energize?", yes:3, no:"Check relay, wiring, and board output." },
         { q:"Is the temperature probe reading correctly?", yes:"Inspect control logic and scale-related heating issues.", no:"Replace the faulty probe or sensor." }
-      ]},
+      ]
+      },
       { id:"water-filter-replacement", machineType:"Water Filtration", issue:"Filter replacement needed", severity:"Low", eta:"5-10 min", symptoms:["Low flow","Poor taste","Service interval reached"], tools:["TDS meter","Pressure gauge"], parts:["Filter cartridge","Scale inhibitor","O-rings"], notes:"Always flush new cartridges and record date and readings.", steps:[
         { q:"Is service interval reached or cartridge restricted?", yes:1, no:"Verify upstream water pressure and equipment demand." },
         { q:"Are correct replacement cartridges on site?", yes:"Replace filters, flush system, and document TDS/pressure.", no:"Order correct cartridges and verify model/part numbers." }
-      ]}
-     */ 
+      ]
+      }
+  
     ];
 
     const checklistItems = [
