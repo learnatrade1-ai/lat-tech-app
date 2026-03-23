@@ -110,28 +110,23 @@
   <script>
 const workflows = [
  {
-  id:"fountain-no-carbonation",
-  machineType:"Fountain Soda",
-  issue:"No carbonation",
-  severity:"High",
-  eta:"10-20 min",
-  symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"],
-  tools:["Pressure gauges","Leak detector","Basic hand tools"],
-  parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"],
-  notes:"Water in the CO2 line usually indicates a failed check valve.",
-  steps: [
-    { q:"Is the CO2 tank open and not empty?", img:"CO2-Tank.jpg", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
-    { q:"Is regulator output within target range?", img:"CO2-Regulator.jpg", yes:2, no:"Adjust or replace the regulator." },
-    { q:"Is the carbonator pump running on demand?", img:"Carbonator-Pump.jpg", yes:3, no:"Check pump power, overload, and pressure switch." },
-    { q:"Is water backing into the CO2 line?", img:"Water-In-CO2-Line.jpg", yes:4, no:"Check carbonator operation, CO2 supply, and downstream restrictions." },
-    { 
-  q:"Recommended Action", 
-  img:"check-valve.jpg", 
-  yes:"Replace the carbonator check valve and inspect fittings for leakage. Then clear the CO2 line and retest carbonation.", 
-  no:"Replace the carbonator check valve and inspect fittings for leakage. Then clear the CO2 line and retest carbonation." 
-}
-]
-},
+     id:"fountain-no-carbonation",
+    machineType:"Fountain Soda",
+    issue:"No carbonation",
+    severity:"High",
+    eta:"10-20 min",
+    symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"],
+    tools:["Pressure gauges","Leak detector","Basic hand tools"],
+    parts:["CO2 regulator","Check valve","Carbonator pump","Carbonator tank switch"],
+    notes:"Water in the CO2 line usually indicates a failed check valve.",
+    steps: [
+      { q:"Is the CO2 tank open and not empty?", img:"CO2-Tank.jpg", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
+      { q:"Is regulator output within target range?", img:"CO2-Regulator.jpg", yes:2, no:"Adjust or replace the regulator." },
+      { q:"Is the carbonator pump running on demand?", img:"Carbonator-Pump.jpg", yes:3, no:"Check pump power, overload, and pressure switch." },
+      { q:"Is water backing into the CO2 line?", img:"Water-In-CO2-Line.jpg", yes:4, no:"Check carbonator operation, CO2 supply, and downstream restrictions." },
+      { q:"Recommended Action", img:"check-valve.jpg", yes:"Replace the carbonator check valve and inspect fittings for leakage. Then clear the CO2 line and retest carbonation.", no:"Replace the carbonator check valve and inspect fittings for leakage. Then clear the CO2 line and retest carbonation." }
+    ]
+  },
   {
     id:"fountain-off-ratio",
     machineType:"Fountain Soda",
@@ -165,6 +160,41 @@ const workflows = [
       { q:"Did water reach the regulator?", yes:"Inspect or replace the regulator if contaminated by water.", no:"Purge line, verify no backflow, and confirm carbonation." }
     ]
   },
+  {
+    id:"fountain-off-ratio",
+    machineType:"Fountain Soda",
+    issue:"Off ratio or Brix",
+    severity:"Medium",
+    eta:"10-15 min",
+    symptoms:["Too sweet","Too weak","Inconsistent flavor","Customer taste complaints"],
+    tools:["Brix cup","Stopwatch","Ratio chart"],
+    parts:["Syrup pump","Water regulator","Valve diffuser","Nozzle"],
+    notes:"Always take several Brix readings after making an adjustment.",
+    steps:[
+      { q:"Is water pressure within spec?", yes:1, no:"Adjust the water regulator or correct the restriction." },
+      { q:"Is the syrup box empty or tubing kinked?", yes:"Replace the BIB or correct the syrup line issue.", no:2 },
+      { q:"Is the syrup pump operating correctly?", yes:3, no:"Repair the gas supply or replace the syrup pump." },
+      { q:"Is the valve clean?", yes:"Adjust Brix ratio and verify with multiple pours.", no:"Clean nozzle, diffuser, and valve body." }
+    ]
+  },
+  {
+    id:"fountain-water-in-co2",
+    machineType:"Fountain Soda",
+    issue:"Water in CO2 line",
+    severity:"High",
+    eta:"10-15 min",
+    symptoms:["Water visible in gas tubing","Weak carbonation","Regulator instability"],
+    tools:["Basic hand tools","Pressure gauge"],
+    parts:["Carbonator check valve","Regulator","Tubing"],
+    notes:"This often points to a failed check valve or improper backflow protection.",
+    steps:[
+      { q:"Is there visible water in the CO2 line?", yes:1, no:"Inspect regulator and gas path for pressure instability instead." },
+      { q:"Has the carbonator check valve been inspected?", yes:2, no:"Replace the check valve first, then purge and retest." },
+      { q:"Did water reach the regulator?", yes:"Inspect or replace the regulator if contaminated by water.", no:"Purge line, verify no backflow, and confirm carbonation." }
+    ]
+  },
+  /*
+  
       { id:"ice-harvest-too-long", machineType:"Ice Machine", issue:"Harvest too long", severity:"High", eta:"15-25 min", symptoms:["Long harvest cycle","Slab hangs","Fault code or freeze/harvest timeout"], tools:["Thermometer","Visual inspection","Amp clamp"], parts:["Hot gas valve","Water curtain","Thermistor"], notes:"Scale and weak hot gas valve performance are common root causes.", steps:[
         { q:"Is the evaporator or plate scaled?", yes:"Clean and descale the unit, then retest harvest.", no:1 },
         { q:"Is the hot gas valve energizing during harvest?", yes:2, no:"Check valve coil, board output, and wiring." },
@@ -205,6 +235,7 @@ const workflows = [
         { q:"Is service interval reached or cartridge restricted?", yes:1, no:"Verify upstream water pressure and equipment demand." },
         { q:"Are correct replacement cartridges on site?", yes:"Replace filters, flush system, and document TDS/pressure.", no:"Order correct cartridges and verify model/part numbers." }
       ]}
+     */ 
     ];
 
     const checklistItems = [
