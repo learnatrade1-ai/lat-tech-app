@@ -665,7 +665,7 @@ if (state.tab === 'checklist') {
     <label class="checkrow"><input type="checkbox" ${state.checklist[k]?'checked':''} onchange="toggleChecklist('${k}')" /> <span>${l}</span></label>
   `).join('');
 }
-
+*/
 if (state.tab === 'calc') {
   const syrup = Number(state.brix.syrup) || 0;
   const water = Number(state.brix.water) || 0;
@@ -691,6 +691,8 @@ if (state.tab === 'calc') {
   }
 
   html = `
+  }
+  /*
     <div class="card">
       <h3>Brix / Ratio Calculator</h3>
       <p>Use syrup separator readings to verify beverage ratio.</p>
