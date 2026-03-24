@@ -359,23 +359,49 @@ const workflows = [
       "For ice machines, confirm board and sensor revision compatibility."
     ];
 
-    const state = {
-      query: '',
-      filter: 'all',
-      selectedId: workflows[0].id,
-      tab: 'workflow',
-      stepIndex: 0,
-      history: [],
-      checklist: { power:false, water:false, gas:false, condenser:false, readings:false },
-      brix: { syrup:'5', water:'1', target:'5.0' },
-      co2: { equipment:'fountain', temperature:'38', elevation:'0' },
-      iceDiag: { brand:'manitowoc', symptom:'freeze-too-long' },
-      report: {
-        techName:'', date:'', customer:'', store:'', model:'', serial:'',
-        complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
-      }
-    };
+ if (state.tab === 'workflow') {
+  const w = workflows.find(x => x.id === state.selectedId);
+  const step = w?.steps?.[state.stepIndex];
 
+  if (!w) {
+    html = `
+      <div class="card">
+        <div class="strong mb-3">Workflow Error</div>
+        <div class="muted">No workflow is currently selected.</div>
+      </div>
+    `;
+  } else if (!step) {
+    html = `
+      <div class="card">
+        <div class="strong mb-3">${w.issue}</div>
+        <div class="muted">No further steps available.</div>
+        <div class="workflow-actions" style="margin-top:15px;">
+          <button class="btn" onclick="state.stepIndex=0; state.history=[]; render();">Restart Workflow</button>
+        </div>
+      </div>
+    `;
+  } else {
+    html = `
+      <div class="card">
+        <div class="strong mb-3">${w.issue}</div>
+        <div class="muted mb-3">Step ${state.stepIndex + 1} of ${w.steps.length}</div>
+
+        <div class="question mb-3">${step.q || ''}</div>
+
+        ${step.img ? `
+          <div class="workflow-image-wrap mb-3">
+            <img src="${step.img}" alt="${step.q || 'Workflow image'}" class="workflow-image" />
+          </div>
+        ` : ''}
+
+        <div class="workflow-actions">
+          <button class="btn yes-btn" onclick="handleWorkflowAnswer('yes')">Yes</button>
+          <button class="btn no-btn" onclick="handleWorkflowAnswer('no')">No</button>
+        </div>
+      </div>
+    `;
+  }
+}
     const tabs = [
       ['workflow','Workflow'],
       ['symptoms','Symptoms'],
