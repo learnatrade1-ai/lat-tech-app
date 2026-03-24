@@ -455,7 +455,17 @@ const workflows = [
       render();
     }
 
-    function setTab(tab) { state.tab = tab; render(); }
+   function setTab(tab) {
+
+  // 🚫 Redirect Brix Calc to Pro page
+  if (tab === 'calc') {
+    window.location.href = 'https://www.learnatrade.online/lat-technician-pro';
+    return;
+  }
+
+  state.tab = tab;
+  render();
+}
     function selectWorkflow(id) { state.selectedId = id; state.stepIndex = 0; state.history = []; render(); }
     function toggleChecklist(key) { state.checklist[key] = !state.checklist[key]; render(); }
     function updateBrix(key, value) { state.brix[key] = value; render(); }
