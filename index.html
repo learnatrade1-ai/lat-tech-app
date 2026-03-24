@@ -619,20 +619,86 @@ const workflows = [
         html = w.symptoms.map(s => `<div class="list-item">${s}</div>`).join('');
       }
 
-      if (state.tab === 'tools') {
-        html = `
-          <div class="grid calc-grid">
-            <div>
-              <div class="strong mb-3">Tools</div>
-              ${w.tools.map(t => `<div class="list-item">${t}</div>`).join('')}
-            </div>
-            <div>
-              <div class="strong mb-3">Likely Parts</div>
-              ${w.parts.map(p => `<div class="list-item">${p}</div>`).join('')}
-            </div>
-          </div>
-        `;
-      }
+     if (state.tab === 'tools') {
+  html = `
+    <div class="grid calc-grid">
+      <div>
+        <div class="strong mb-3">Tools</div>
+        ${w.tools.map(t => `<div class="list-item">${t}</div>`).join('')}
+      </div>
+      <div>
+        <div class="strong mb-3">Likely Parts</div>
+        ${w.parts.map(p => `<div class="list-item">${p}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+if (state.tab === 'checklist') {
+  html = checklistItems.map(([k,l]) => `
+    <label class="checkrow"><input type="checkbox" ${state.checklist[k]?'checked':''} onchange="toggleChecklist('${k}')" /> <span>${l}</span></label>
+  `).join('');
+}
+
+if (state.tab === 'calc') {
+  const syrup = Number(state.brix.syrup) || 0;
+  const water = Number(state.brix.water) || 0;
+  const productType = state.brix.productType || 'sugar';
+  const targetRatio = productType === 'diet' ? 4 : 5;
+  const targetBrix = productType === 'diet' ? 9.0 : 13.5;
+  const actualRatio = syrup === 0 ? 0 : water / syrup;
+
+  let status = 'Enter syrup and water values greater than 0.';
+  let guidance = '';
+
+  if (syrup > 0 && water > 0) {
+    if (Math.abs(actualRatio - targetRatio) <= 0.2) {
+      status = 'On target';
+      guidance = 'Ratio looks good. Verify with multiple pours and confirm taste.';
+    } else if (actualRatio < targetRatio) {
+      status = 'Too strong (syrup-heavy)';
+      guidance = 'Reduce syrup or increase water slightly, then retest.';
+    } else {
+      status = 'Too weak (water-heavy)';
+      guidance = 'Increase syrup or reduce water slightly, then retest.';
+    }
+  }
+
+  html = `
+    <div class="card">
+      <h3>Brix / Ratio Calculator</h3>
+      <p>Use syrup separator readings to verify beverage ratio.</p>
+
+      <label>Product Type</label>
+      <select onchange="state.brix.productType = this.value; render();">
+        <option value="sugar" ${productType === 'sugar' ? 'selected' : ''}>Sugar (5:1)</option>
+        <option value="diet" ${productType === 'diet' ? 'selected' : ''}>Diet / Sugar-Free (4:1)</option>
+      </select>
+
+      <label>Syrup (oz)</label>
+      <input type="number" value="${syrup || ''}" oninput="state.brix.syrup = this.value; render();" />
+
+      <label>Water (oz)</label>
+      <input type="number" value="${water || ''}" oninput="state.brix.water = this.value; render();" />
+
+      <div style="margin-top:15px;">
+        <strong>Measured Ratio:</strong> ${syrup > 0 ? actualRatio.toFixed(2) + ':1' : '--'}<br>
+        <strong>Target Ratio:</strong> ${targetRatio}:1<br>
+        <strong>Status:</strong> ${status}<br>
+        <strong>Reference Brix:</strong> ~${targetBrix}<br>
+        <strong>Guidance:</strong> ${guidance}
+      </div>
+
+      <hr>
+
+      <ul>
+        <li>Sugar beverages: 5:1 ratio (~13.5 Brix)</li>
+        <li>Diet beverages: 4:1 ratio (~9.0 Brix)</li>
+        <li>Recommended water pressure: 85–92 PSI</li>
+      </ul>
+    </div>
+  `;
+}
 
       if (state.tab === 'checklist') {
         html = checklistItems.map(([k,l]) => `
