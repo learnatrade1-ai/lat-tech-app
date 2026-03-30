@@ -105,18 +105,18 @@
   <a class="btn btn-upgrade" href="https://www.learnatrade.online/unlock-lat-technician-pro-access" target="_blank">
     Unlock Pro Access
   </a>
-  <a class="btn" href="#workflowList">
-    Use Free Features
-  </a>
+  <a class="btn" href="#freeFeatures">
+  Use Free Features
+</a>
 </div>
 
-    <div class="grid two-col">
+    <div class="grid two-col" id="freeFeatures">
      <div class="card p-5 library" id="workflowList">
         <div class="strong mb-3">Workflow Library</div>
-        <div id="workflowList"></div>
+       <div id="workflowItems"></div>
       </div>
 
-      <div class="card p-6">
+    <div class="card p-6">
         <div class="tabs mb-4" id="tabs"></div>
         <div id="content"></div>
       </div>
@@ -476,7 +476,7 @@ const workflows = [
 
     function renderLibrary() {
       const list = filteredWorkflows();
-      document.getElementById('workflowList').innerHTML = list.map(w => {
+    document.getElementById('workflowItems').innerHTML = ...
         const locked = isProWorkflow(w.id) && !isProUser;
         return `
         <button class="${state.selectedId===w.id && !locked?'active':''}" onclick="selectWorkflow('${w.id}')">
