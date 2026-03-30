@@ -108,6 +108,19 @@
   </div>
 
   <script>
+    let isProUser = false; // toggle for testing
+    function requirePro(message = "This is a Pro feature") {
+  if (!isProUser) {
+    const confirmUpgrade = confirm(
+      message + "\n\nUnlock full diagnostics with LAT Technician Pro.\n\nOpen upgrade page?"
+    );
+    if (confirmUpgrade) {
+      window.open("https://www.learnatrade.online/unlock-lat-technician-pro-access", "_blank");
+    }
+    return false;
+  }
+  return true;
+}
 const workflows = [
   {
     id:"fountain-no-carbonation",
@@ -448,10 +461,13 @@ const workflows = [
       const log = state.history.filter(i => !i.result).concat([{ question: current.q, answer: type.toUpperCase() }]);
       if (typeof next === 'number') {
         state.history = log;
-        state.stepIndex = next;
-      } else {
-        state.history = log.concat([{ result: next }]);
-      }
+        state.history = log;
+
+if (!isProUser && typeof next === "number" && next >= 3) {
+  if (!requirePro("You’re one step away from the full diagnostic.\n\nUnlock Pro to continue and complete this repair with confidence.")) return;
+}
+
+state.stepIndex = next;
       render();
     }
 
@@ -579,7 +595,16 @@ const workflows = [
       doc.save('LAT-service-report.pdf');
     }
 
- function renderContent() {
+function exportReport() {
+  if (!requirePro("Service report export is a Pro feature")) return;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const r = state.report;
+  let y = 12;
+
+  // rest of your code...
+}
   const w = currentWorkflow();
   const finalResult = state.history.length && state.history[state.history.length - 1].result;
   const current = w.steps[state.stepIndex];
