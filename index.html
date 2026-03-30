@@ -70,6 +70,12 @@
     .small { font-size: 12px; }
     .strong { font-weight: 700; }
     .photo-preview { max-width: 100%; max-height: 180px; border-radius: 10px; display: block; margin-top: 10px; }
+    .pro-badge { display:inline-block; margin-left:8px; padding:2px 6px; border-radius:999px; font-size:10px; font-weight:700; background:#dc2626; color:#fff; vertical-align:middle; }
+    .upgrade-strip { border:1px solid #bfdbfe; background:#eff6ff; }
+    .upgrade-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+    .btn-upgrade { background:#2563eb; color:#fff; border-color:#2563eb; }
+    .btn-upgrade:hover { background:#1d4ed8; }
+    .locked-note { color:#1e3a8a; }
     @media (max-width: 900px) {
       .two-col, .hero-grid, .calc-grid { grid-template-columns: 1fr; }
       .title { font-size: 24px; }
@@ -80,7 +86,7 @@
   <div class="wrap">
     <div class="card p-6 mb-4">
       <div class="title">LAT Technician Pro — Commercial Beverage Equipment Troubleshooting</div>
-      <div class="muted mt-2">Single-file technician app with workflows, diagnostics, calculators, PDF export, and saved reports.</div>
+      <div class="muted mt-2">Single-file technician app with free core workflows plus Pro diagnostics, advanced tabs, PDF export, and saved reports.</div>
       <div class="grid hero-grid mt-4">
         <input id="search" class="field" placeholder="Search workflow, machine, issue, or symptom" />
         <select id="machineFilter">
@@ -91,6 +97,14 @@
           <option value="Coffee / Espresso">Coffee / Espresso</option>
           <option value="Water Filtration">Water Filtration</option>
         </select>
+      </div>
+      <div class="panel upgrade-strip mt-4">
+        <div class="strong">Free Mode + Pro Upgrade Path</div>
+        <div class="muted mt-2">Free access includes your core fountain workflows. Pro unlocks advanced workflows, specialty diagnostic tabs, and PDF report export.</div>
+        <div class="upgrade-actions">
+          <button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button>
+          <button class="btn" onclick="setTab('workflow')">Use Free Features</button>
+        </div>
       </div>
     </div>
 
@@ -108,6 +122,53 @@
   </div>
 
   <script>
+const UPGRADE_URL = "https://www.learnatrade.online/unlock-lat-technician-pro-access";
+let isProUser = false;
+
+const proWorkflowIds = new Set([
+  "ice-harvest-too-long",
+  "ice-freeze-too-long",
+  "ice-hollow-cubes",
+  "frozen-no-freeze",
+  "frozen-barrel-solid",
+  "coffee-low-flow",
+  "coffee-no-heat",
+  "water-filter-replacement"
+]);
+
+const proTabs = new Set([
+  "co2",
+  "iceDiag",
+  "carbonator",
+  "errorCodes",
+  "hoshizaki",
+  "manitowoc",
+  "scotsman",
+  "refrig",
+  "filterCalc",
+  "valveId",
+  "parts",
+  "report"
+]);
+
+function openUpgradePage() {
+  window.open(UPGRADE_URL, "_blank");
+}
+
+function requirePro(message = "This feature is part of LAT Technician Pro.") {
+  const confirmUpgrade = confirm(message + "\n\nOpen the upgrade page now?");
+  if (confirmUpgrade) openUpgradePage();
+  return false;
+}
+
+function isProWorkflow(id) {
+  return proWorkflowIds.has(id);
+}
+
+function isProTab(tab) {
+  return proTabs.has(tab);
+}
+
 const workflows = [
   {
     id:"fountain-no-carbonation",
@@ -413,17 +474,22 @@ const workflows = [
 
     function renderLibrary() {
       const list = filteredWorkflows();
-      document.getElementById('workflowList').innerHTML = list.map(w => `
-        <button class="${state.selectedId===w.id?'active':''}" onclick="selectWorkflow('${w.id}')">
-          <div class="strong">${w.issue}</div>
-          <small>${w.machineType} • ${w.eta}</small>
+      document.getElementById('workflowList').innerHTML = list.map(w => {
+        const locked = isProWorkflow(w.id) && !isProUser;
+        return `
+        <button class="${state.selectedId===w.id && !locked?'active':''}" onclick="selectWorkflow('${w.id}')">
+          <div class="strong">${w.issue}${isProWorkflow(w.id) ? '<span class="pro-badge">PRO</span>' : ''}</div>
+          <small>${w.machineType} • ${w.eta}${locked ? ' • Locked in Free' : ''}</small>
         </button>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function renderTabs() {
       document.getElementById('tabs').innerHTML = tabs.map(t => `
-        <button class="tab ${state.tab===t[0]?'active':''}" onclick="setTab('${t[0]}')">${t[1]}</button>
+        <button class="tab ${state.tab===t[0]?'active':''}" onclick="setTab('${t[0]}')">
+          ${t[1]}${isProTab(t[0]) ? ' <span class="pro-badge">PRO</span>' : ''}
+        </button>
       `).join('');
     }
 
@@ -455,8 +521,25 @@ const workflows = [
       render();
     }
 
-    function setTab(tab) { state.tab = tab; render(); }
-    function selectWorkflow(id) { state.selectedId = id; state.stepIndex = 0; state.history = []; render(); }
+    function setTab(tab) {
+      if (isProTab(tab) && !isProUser) {
+        requirePro("This diagnostic tab is part of LAT Technician Pro.");
+        return;
+      }
+      state.tab = tab;
+      render();
+    }
+
+    function selectWorkflow(id) {
+      if (isProWorkflow(id) && !isProUser) {
+        requirePro("This workflow is part of LAT Technician Pro.");
+        return;
+      }
+      state.selectedId = id;
+      state.stepIndex = 0;
+      state.history = [];
+      render();
+    }
     function toggleChecklist(key) { state.checklist[key] = !state.checklist[key]; render(); }
     function updateBrix(key, value) { state.brix[key] = value; render(); }
     function updateCo2(key, value) { state.co2[key] = value; render(); }
@@ -528,6 +611,10 @@ const workflows = [
     }
 
     function exportReport() {
+      if (!isProUser) {
+        requirePro("PDF report export is part of LAT Technician Pro.");
+        return;
+      }
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       const r = state.report;
@@ -582,6 +669,7 @@ const workflows = [
           <div class="panel mb-4">
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
+            ${!isProUser ? `<div class="panel warn mt-4"><div class="strong">Using Free Mode</div><div class="small locked-note mt-2">Free access includes the core fountain workflows. Upgrade to Pro for ice, frozen beverage, coffee, filtration, advanced tabs, and PDF report export.</div><div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div></div>` : ''}
             ${!finalResult ? `
             <div class="mt-4 strong">
   ${current.q}
@@ -901,7 +989,7 @@ if (syrup > 0 && water > 0) {
       if (state.tab === 'report') {
         const savedReports = getSavedReports();
         html = `
-          <input class="field mb-3" placeholder="Technician name" value="${state.report.techName}" oninput="updateReport('techName', this.value)" />
+          <input id="reportTech" class="field mb-3" placeholder="Technician name" value="${state.report.techName}" oninput="updateReport('techName', this.value)" />
           <input class="field mb-3" placeholder="Date" value="${state.report.date}" oninput="updateReport('date', this.value)" />
           <input class="field mb-3" placeholder="Customer" value="${state.report.customer}" oninput="updateReport('customer', this.value)" />
           <input class="field mb-3" placeholder="Store" value="${state.report.store}" oninput="updateReport('store', this.value)" />
@@ -924,6 +1012,12 @@ if (syrup > 0 && water > 0) {
                 <button class="btn btn-secondary mt-3" onclick="removeReportPhoto(${i})">Remove Photo</button>
               </div>
             `).join('') : '<div class="muted small">No photos attached yet.</div>'}
+          </div>
+
+          <div class="panel warn mb-4">
+            <div class="strong">Pro Feature Area</div>
+            <div class="small locked-note mt-2">Saved reports remain available in Free mode. PDF download is unlocked with LAT Technician Pro.</div>
+            ${!isProUser ? `<div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div>` : ''}
           </div>
 
           <div style="display:flex;gap:12px;flex-wrap:wrap;" class="mb-4">
