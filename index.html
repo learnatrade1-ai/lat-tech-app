@@ -108,8 +108,6 @@
   </div>
 
   <script>
-    let isProUser = false; // toggle for testing
-  
 const workflows = [
   {
     id:"fountain-no-carbonation",
@@ -450,10 +448,10 @@ const workflows = [
       const log = state.history.filter(i => !i.result).concat([{ question: current.q, answer: type.toUpperCase() }]);
       if (typeof next === 'number') {
         state.history = log;
-        state.history = log;
-
-
-state.stepIndex = next;
+        state.stepIndex = next;
+      } else {
+        state.history = log.concat([{ result: next }]);
+      }
       render();
     }
 
@@ -581,16 +579,7 @@ state.stepIndex = next;
       doc.save('LAT-service-report.pdf');
     }
 
-function exportReport() {
-  if (!requirePro("Service report export is a Pro feature")) return;
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const r = state.report;
-  let y = 12;
-
-  // rest of your code...
-}
+ function renderContent() {
   const w = currentWorkflow();
   const finalResult = state.history.length && state.history[state.history.length - 1].result;
   const current = w.steps[state.stepIndex];
