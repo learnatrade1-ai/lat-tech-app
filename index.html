@@ -455,34 +455,20 @@ const workflows = [
       render();
     }
 
-  function setTab(tab) {
-
-  // 🚫 Pro-only tabs redirect
-  const proTabs = [
-    'calc',          // Brix
-    'co2',
-    'iceDiag',
-    'carbonator',
-    'errorCodes',
-    'hoshizaki',
-    'manitowoc',
-    'scotsman',
-    'refrig',
-    'filterCalc',
-    'valveId',
-    'partsLookup',
-    'notes',
-    'report'
-  ];
-
-  if (proTabs.includes(tab)) {
-    window.location.href = 'https://www.learnatrade.online/lat-technician-pro';
-    return;
-  }
-
-  state.tab = tab;
-  render();
-}
+    function setTab(tab) { state.tab = tab; render(); }
+    function selectWorkflow(id) { state.selectedId = id; state.stepIndex = 0; state.history = []; render(); }
+    function toggleChecklist(key) { state.checklist[key] = !state.checklist[key]; render(); }
+    function updateBrix(key, value) { state.brix[key] = value; render(); }
+    function updateCo2(key, value) { state.co2[key] = value; render(); }
+    function updateIceDiag(key, value) { state.iceDiag[key] = value; render(); }
+    function updateReport(key, value) { state.report[key] = value; }
+    function clearReport() {
+      state.report = {
+        techName:'', date:'', customer:'', store:'', model:'', serial:'',
+        complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
+      };
+      render();
+    }
 
     function getSavedReports() {
       try {
