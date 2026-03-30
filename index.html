@@ -640,18 +640,19 @@ const workflows = [
         `).join('');
       }
 
-      if (state.tab === 'calc') {
-        const syrup = Number(state.brix.syrup)||0;
-        const water = Number(state.brix.water)||0;
-        const target = Number(state.brix.target)||0;
-        const actualRatio = water === 0 ? 0 : syrup / water;
-        const targetRatio = target === 0 ? 0 : 1 / target;
-        let status = 'Enter a water value greater than 0.';
-        if (water > 0) {
-          if (Math.abs(actualRatio - targetRatio) < 0.001) status = 'On target';
-          else if (actualRatio > targetRatio) status = 'Too strong or syrup-heavy';
-          else status = 'Too weak or water-heavy';
-        }
+     const syrup = Number(state.brix.syrup) || 0;
+const water = Number(state.brix.water) || 0;
+const productType = state.brix.productType || 'sugar';
+const targetRatio = productType === 'diet' ? 4 : 5;
+const targetBrix = productType === 'diet' ? 9.0 : 13.5;
+const actualRatio = syrup === 0 ? 0 : water / syrup;
+
+let status = 'Enter syrup and water values greater than 0.';
+if (syrup > 0 && water > 0) {
+  if (Math.abs(actualRatio - targetRatio) <= 0.2) status = 'On target';
+  else if (actualRatio < targetRatio) status = 'Too strong or syrup-heavy';
+  else status = 'Too weak or water-heavy';
+}
         html = `
           <div class="calc-grid">
             <div class="panel">
