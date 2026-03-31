@@ -1049,7 +1049,7 @@ const workflows = [
         `;
       }
 
-      document.getElementById('content').innerHTML = html;
+        document.getElementById('content').innerHTML = html;
     }
 
     function render() {
@@ -1069,80 +1069,81 @@ const workflows = [
       state.filter = e.target.value;
       render();
     });
-let deferredInstallPrompt = null;
 
-function showInstallButton() {
-  if (document.getElementById('installAppBtn')) return;
+    let deferredInstallPrompt = null;
 
-  const btn = document.createElement('button');
-  btn.id = 'installAppBtn';
-  btn.className = 'install-btn';
-  btn.textContent = 'Install App';
+    function showInstallButton() {
+      if (document.getElementById('installAppBtn')) return;
 
-  btn.onclick = async () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-      btn.remove();
-    } else {
-      alert('Use your browser menu and choose Add to Home Screen or Install App.');
+      const btn = document.createElement('button');
+      btn.id = 'installAppBtn';
+      btn.className = 'install-btn';
+      btn.textContent = 'Install App';
+
+      btn.onclick = async () => {
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          await deferredInstallPrompt.userChoice;
+          deferredInstallPrompt = null;
+          btn.remove();
+        } else {
+          alert('Use your browser menu and choose Add to Home Screen or Install App.');
+        }
+      };
+
+      document.body.appendChild(btn);
     }
-  };
 
-  document.body.appendChild(btn);
-}
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      showInstallButton();
+    });
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  showInstallButton();
-});
     render();
   </script>
+
   <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-</script>
-  <!-- SERVICE REPORT SECTION -->
-
-
-<script>
-function saveTechName() {
-  const techField = document.getElementById('reportTech');
-  if (techField) {
-    localStorage.setItem('latTechName', techField.value);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
   }
-}
+  </script>
 
-function tryLoadTechName() {
-  const techField = document.getElementById('reportTech');
-  const saved = localStorage.getItem('latTechName');
-
-  if (techField) {
-    if (saved && !techField.value) {
-      techField.value = saved;
+  <script>
+  function saveTechName() {
+    const techField = document.getElementById('reportTech');
+    if (techField) {
+      localStorage.setItem('latTechName', techField.value);
     }
+  }
 
-    if (!techField.dataset.boundTechName) {
-      techField.addEventListener('change', saveTechName);
-      techField.addEventListener('blur', saveTechName);
-      techField.dataset.boundTechName = 'true';
+  function tryLoadTechName() {
+    const techField = document.getElementById('reportTech');
+    const saved = localStorage.getItem('latTechName');
+
+    if (techField) {
+      if (saved && !techField.value) {
+        techField.value = saved;
+      }
+
+      if (!techField.dataset.boundTechName) {
+        techField.addEventListener('change', saveTechName);
+        techField.addEventListener('blur', saveTechName);
+        techField.dataset.boundTechName = 'true';
+      }
+
+      return true;
     }
-
-    return true;
+    return false;
   }
-  return false;
-}
 
-let attempts = 0;
-const interval = setInterval(() => {
-  if (tryLoadTechName() || attempts > 10) {
-    clearInterval(interval);
-  }
-  attempts++;
-}, 300);
-</script>
+  let attempts = 0;
+  const interval = setInterval(() => {
+    if (tryLoadTechName() || attempts > 10) {
+      clearInterval(interval);
+    }
+    attempts++;
+  }, 300);
+  </script>
 </body>
 </html>
