@@ -522,14 +522,10 @@ const workflows = [
       render();
     }
 
-    function setTab(tab) {
-      if (isProTab(tab) && !isProUser) {
-        requirePro("This diagnostic tab is part of LAT Technician Pro.");
-        return;
-      }
-      state.tab = tab;
-      render();
-    }
+  function setTab(tab) {
+  state.tab = tab;
+  render();
+}
 
     function selectWorkflow(id) {
       if (isProWorkflow(id) && !isProUser) {
