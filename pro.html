@@ -663,7 +663,7 @@ const workflows = [
           <div class="panel mb-4">
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
-            ${!isProUser ? `<div class="panel warn mt-4"><div class="strong">Using Free Mode</div><div class="small locked-note mt-2">Free access includes the core fountain workflows. Upgrade to Pro for ice, frozen beverage, coffee, filtration, advanced tabs, and PDF report export.</div><div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div></div>` : ''}
+            
             ${!finalResult ? `
             <div class="mt-4 strong">
   ${current.q}
