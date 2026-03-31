@@ -464,7 +464,7 @@ const workflows = [
       return workflows.filter(w => {
         const machineMatch = state.filter === 'all' || w.machineType === state.filter;
         const q = state.query.trim().toLowerCase();
-        const text = [w.machineType, w.issue, ...(w.symptoms || [])].join(' ').toLowerCase();
+       const text = [w.machineType, w.issue].concat(w.symptoms || []).join(' ').toLowerCase();
         return machineMatch && (!q || text.includes(q));
       });
     }
