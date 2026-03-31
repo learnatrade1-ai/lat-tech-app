@@ -101,11 +101,16 @@
       <div class="panel upgrade-strip mt-4">
         <div class="strong">Free Mode + Pro Upgrade Path</div>
         <div class="muted mt-2">Free access includes your core fountain workflows. Pro unlocks advanced workflows, specialty diagnostic tabs, and PDF report export.</div>
-    <div class="upgrade-actions">
+   <div class="upgrade-actions">
   <a class="btn btn-upgrade" href="https://www.learnatrade.online/unlock-lat-technician-pro-access" target="_blank">
     Unlock Pro Access
   </a>
-  <button class="btn" onclick="setTab('workflow')">
+  <button class="btn" onclick="
+    const firstWorkflow = document.querySelector('#workflowItems button');
+    if (firstWorkflow) firstWorkflow.click();
+    const section = document.getElementById('freeFeatures');
+    if (section) section.scrollIntoView({behavior:'smooth'});
+  ">
     Open Free Workflow
   </button>
 </div>
