@@ -473,18 +473,18 @@ const workflows = [
       return list.find(w => w.id === state.selectedId) || list[0] || workflows[0];
     }
 
-    function renderLibrary() {
-      const list = filteredWorkflows();
-    document.getElementById('workflowItems').innerHTML = ...
-        const locked = isProWorkflow(w.id) && !isProUser;
-        return `
-        <button class="${state.selectedId===w.id && !locked?'active':''}" onclick="selectWorkflow('${w.id}')">
-          <div class="strong">${w.issue}${isProWorkflow(w.id) ? '<span class="pro-badge">PRO</span>' : ''}</div>
-          <small>${w.machineType} • ${w.eta}${locked ? ' • Locked in Free' : ''}</small>
-        </button>
-      `;
-      }).join('');
-    }
+   function renderLibrary() {
+  const list = filteredWorkflows();
+  document.getElementById('workflowItems').innerHTML = list.map(w => {
+    const locked = isProWorkflow(w.id) && !isProUser;
+    return `
+      <button class="${state.selectedId===w.id && !locked ? 'active' : ''}" onclick="selectWorkflow('${w.id}')">
+        <div class="strong">${w.issue}${isProWorkflow(w.id) ? ' <span class="pro-badge">PRO</span>' : ''}</div>
+        <small>${w.machineType} • ${w.eta}${locked ? ' • Locked in Free' : ''}</small>
+      </button>
+    `;
+  }).join('');
+}
 
     function renderTabs() {
       document.getElementById('tabs').innerHTML = tabs.map(t => `
