@@ -723,25 +723,30 @@ const workflows = [
         `;
       }
 
-      if (state.tab === 'checklist') {
+           if (state.tab === 'checklist') {
         html = checklistItems.map(([k,l]) => `
-          <label class="checkrow"><input type="checkbox" ${state.checklist[k]?'checked':''} onchange="toggleChecklist('${k}')" /> <span>${l}</span></label>
+          <label class="checkrow">
+            <input type="checkbox" ${state.checklist[k] ? 'checked' : ''} onchange="toggleChecklist('${k}')" />
+            <span>${l}</span>
+          </label>
         `).join('');
       }
 
-     const syrup = Number(state.brix.syrup) || 0;
-const water = Number(state.brix.water) || 0;
-const productType = state.brix.productType || 'sugar';
-const targetRatio = productType === 'diet' ? 4 : 5;
-const targetBrix = productType === 'diet' ? 9.0 : 13.5;
-const actualRatio = syrup === 0 ? 0 : water / syrup;
+      if (state.tab === 'calc') {
+        const syrup = Number(state.brix.syrup) || 0;
+        const water = Number(state.brix.water) || 0;
+        const productType = state.brix.productType || 'sugar';
+        const targetRatio = productType === 'diet' ? 4 : 5;
+        const targetBrix = productType === 'diet' ? 9.0 : 13.5;
+        const actualRatio = syrup === 0 ? 0 : water / syrup;
 
-let status = 'Enter syrup and water values greater than 0.';
-if (syrup > 0 && water > 0) {
-  if (Math.abs(actualRatio - targetRatio) <= 0.2) status = 'On target';
-  else if (actualRatio < targetRatio) status = 'Too strong or syrup-heavy';
-  else status = 'Too weak or water-heavy';
-}
+        let status = 'Enter syrup and water values greater than 0.';
+        if (syrup > 0 && water > 0) {
+          if (Math.abs(actualRatio - targetRatio) <= 0.2) status = 'On target';
+          else if (actualRatio < targetRatio) status = 'Too strong or syrup-heavy';
+          else status = 'Too weak or water-heavy';
+        }
+
         html = `
           <div class="calc-grid">
             <div class="panel">
@@ -752,6 +757,7 @@ if (syrup > 0 && water > 0) {
               <div class="panel panel-soft mt-4">
                 <div><span class="strong">Actual syrup to water ratio:</span> ${actualRatio.toFixed(3)}</div>
                 <div class="mt-2"><span class="strong">Target syrup to water ratio:</span> ${targetRatio.toFixed(3)}</div>
+                <div class="mt-2"><span class="strong">Target Brix:</span> ${targetBrix}</div>
                 <div class="mt-2"><span class="strong">Status:</span> ${status}</div>
               </div>
             </div>
