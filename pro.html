@@ -527,16 +527,13 @@ const workflows = [
   render();
 }
 
-    function selectWorkflow(id) {
-      if (isProWorkflow(id) && !isProUser) {
-        requirePro("This workflow is part of LAT Technician Pro.");
-        return;
-      }
-      state.selectedId = id;
-      state.stepIndex = 0;
-      state.history = [];
-      render();
-    }
+  function selectWorkflow(id) {
+  state.selectedId = id;
+  state.stepIndex = 0;
+  state.history = [];
+  state.tab = 'workflow';
+  render();
+}
     function toggleChecklist(key) { state.checklist[key] = !state.checklist[key]; render(); }
     function updateBrix(key, value) { state.brix[key] = value; render(); }
     function updateCo2(key, value) { state.co2[key] = value; render(); }
