@@ -652,14 +652,20 @@ const workflows = [
   const current = w.steps[state.stepIndex];
   const progress = finalResult ? 100 : Math.round(((state.stepIndex + 1) / w.steps.length) * 100);
   let html = '';
+if (state.tab === 'workflow') {
+  html = `
 
-  if (state.tab === 'workflow') {
-        html = `
-          <div class="mb-3">
-            <span class="pill">${w.machineType}</span>
-            <span class="pill">${w.severity}</span>
-            <span class="pill">${w.eta}</span>
-          </div>
+  <div class="panel mt-3" style="background:#0f172a; color:#fff; border-radius:10px; padding:12px;">
+    <div class="strong">LAT Technician Pro — Full Access</div>
+    <div class="small">Advanced diagnostics and full workflow access for field technicians.</div>
+  </div>
+
+  <div class="mb-3">
+    <span class="pill">${w.machineType}</span>
+    <span class="pill">${w.severity}</span>
+    <span class="pill">${w.eta}</span>
+  </div>
+ 
           <div class="panel mb-4">
             <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
             <div class="progress"><div style="width:${progress}%"></div></div>
