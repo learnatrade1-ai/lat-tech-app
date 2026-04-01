@@ -476,7 +476,7 @@ const workflows = [
    function renderLibrary() {
   const list = filteredWorkflows();
   document.getElementById('workflowItems').innerHTML = list.map(w => {
-    const locked = isProWorkflow(w.id) && !isProUser;
+   const locked = false;
     return `
       <button class="${state.selectedId===w.id && !locked ? 'active' : ''}" onclick="selectWorkflow('${w.id}')">
         <div class="strong">${w.issue}${isProWorkflow(w.id) ? ' <span class="pro-badge">PRO</span>' : ''}</div>
