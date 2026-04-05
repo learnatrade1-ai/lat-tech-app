@@ -218,23 +218,37 @@ const workflows = [
       }
     ]
   },
-  {
-    id:"fountain-off-ratio",
-    machineType:"Fountain Soda",
-    issue:"Off ratio or Brix",
-    severity:"Medium",
-    eta:"10-15 min",
-    symptoms:[
-      "Too sweet",
-      "Too weak",
-      "Inconsistent flavor",
-      "Customer taste complaints"
-    ],
-  },
-    // =========================
-// CRYSALLI WORKFLOWS
-// =========================
-
+{
+  id:"fountain-off-ratio",
+  machineType:"Fountain Soda",
+  issue:"Off ratio or Brix",
+  severity:"Medium",
+  eta:"10-15 min",
+  symptoms:[
+    "Too sweet",
+    "Too weak",
+    "Inconsistent flavor",
+    "Customer taste complaints"
+  ],
+  tools:[
+    "Brix cup",
+    "Syrup separator",
+    "Small screwdriver",
+    "Pressure gauge"
+  ],
+  parts:[
+    "Syrup pump",
+    "Water regulator",
+    "Flow control parts"
+  ],
+  notes:"Verify water pressure, syrup supply, and valve adjustment before replacing parts.",
+  steps:[
+    { q:"Is the syrup BIB connected and not empty?", yes:1, no:"Reconnect or replace syrup BIB." },
+    { q:"Is plain water pressure within normal range?", yes:2, no:"Correct incoming water pressure issue." },
+    { q:"Is syrup pressure or pump operating correctly?", yes:3, no:"Repair syrup pump or supply issue." },
+    { q:"Does the valve need Brix adjustment?", yes:"Adjust valve to correct ratio and retest.", no:"Inspect for restriction or worn valve components." }
+  ]
+},
 {
   id: "crysalli-not-cooling-80",
   machineType: "Crysalli Beverage System",
