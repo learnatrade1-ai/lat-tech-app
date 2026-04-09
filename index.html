@@ -123,8 +123,7 @@
   </div>
 
   <script>
-const UPGRADE_URL = "https://www.learnatrade.online/unlock-lat-technician-pro-access";
-let isProUser = false;
+const UPGRADE_URL = "https://www.learnatrade.online/simple-pro-upgrade-request";
 
 const proWorkflowIds = new Set([
   "ice-harvest-too-long",
@@ -157,7 +156,8 @@ function openUpgradePage() {
 }
 
 function requirePro(message = "This feature is part of LAT Technician Pro.") {
-  alert("requirePro is firing");
+  const confirmUpgrade = confirm(message + "\n\nOpen the upgrade page now?");
+  if (confirmUpgrade) openUpgradePage();
   return false;
 }
 function isProWorkflow(id) {
