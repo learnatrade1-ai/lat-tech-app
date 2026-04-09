@@ -157,11 +157,9 @@ function openUpgradePage() {
 }
 
 function requirePro(message = "This feature is part of LAT Technician Pro.") {
-  const confirmUpgrade = confirm(message + "\n\nOpen the upgrade page now?");
-  if (confirmUpgrade) openUpgradePage();
+  alert("requirePro is firing");
   return false;
 }
-
 function isProWorkflow(id) {
   return proWorkflowIds.has(id);
 }
