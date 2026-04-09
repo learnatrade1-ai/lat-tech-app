@@ -6,9 +6,9 @@
   <title>LAT Technician Pro</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0f172a" />
- <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="apple-mobile-web-app-title" content="LAT Technician Pro" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LAT Technician Pro" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
 .install-btn {
@@ -39,7 +39,7 @@
     .two-col { grid-template-columns: 320px 1fr; }
     .hero-grid { grid-template-columns: 1fr 220px; }
     .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .btn { border: 1px solid #cbd5e1; background: #fff; color: #0f172a; border-radius: 12px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+    .btn { border: 1px solid #cbd5e1; background: #fff; color: #0f172a; border-radius: 12px; padding: 10px 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
     .btn:hover { background: #f8fafc; }
     .btn-primary { background: #0f172a; color: #fff; border-color: #0f172a; }
     .btn-primary:hover { background: #1e293b; }
@@ -101,29 +101,33 @@
       <div class="panel upgrade-strip mt-4">
         <div class="strong">Free Mode + Pro Upgrade Path</div>
         <div class="muted mt-2">Free access includes your core fountain workflows. Pro unlocks advanced workflows, specialty diagnostic tabs, and PDF report export.</div>
-<div class="upgrade-actions">
-  <a class="btn btn-upgrade" href="https://www.learnatrade.online/unlock-lat-technician-pro-access" target="_blank">
-    Unlock Pro Access
-  </a>
-  <a class="btn" href="https://learnatrade1-ai.github.io/lat-tech-app/" target="_blank">
-    Open Free App
-  </a>
-</div>
-    <div class="grid two-col" id="freeFeatures">
-     <div class="card p-5 library" id="workflowList">
-        <div class="strong mb-3">Workflow Library</div>
-       <div id="workflowItems"></div>
+        <div class="upgrade-actions">
+          <a class="btn btn-upgrade" href="https://www.learnatrade.online/simple-pro-upgrade-request" target="_blank">
+            Unlock Pro Access
+          </a>
+          <a class="btn" href="https://learnatrade1-ai.github.io/lat-tech-app/" target="_blank">
+            Open Free App
+          </a>
+        </div>
       </div>
 
-    <div class="card p-6">
-        <div class="tabs mb-4" id="tabs"></div>
-        <div id="content"></div>
+      <div class="grid two-col mt-4" id="freeFeatures">
+        <div class="card p-5 library" id="workflowList">
+          <div class="strong mb-3">Workflow Library</div>
+          <div id="workflowItems"></div>
+        </div>
+
+        <div class="card p-6">
+          <div class="tabs mb-4" id="tabs"></div>
+          <div id="content"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
 const UPGRADE_URL = "https://www.learnatrade.online/simple-pro-upgrade-request";
+let isProUser = false;
 
 const proWorkflowIds = new Set([
   "ice-harvest-too-long",
@@ -152,7 +156,7 @@ const proTabs = new Set([
 ]);
 
 function openUpgradePage() {
-  window.open(UPGRADE_URL, "_blank");
+  window.location.href = UPGRADE_URL;
 }
 
 function requirePro(message = "This feature is part of LAT Technician Pro.") {
@@ -160,6 +164,7 @@ function requirePro(message = "This feature is part of LAT Technician Pro.") {
   if (confirmUpgrade) openUpgradePage();
   return false;
 }
+
 function isProWorkflow(id) {
   return proWorkflowIds.has(id);
 }
@@ -175,54 +180,16 @@ const workflows = [
     issue:"No carbonation",
     severity:"High",
     eta:"10-20 min",
-    symptoms:[
-      "Drinks are flat",
-      "No carbonator sound",
-      "Low or no CO2 pressure"
-    ],
-    tools:[
-      "Pressure gauges",
-      "Leak detector",
-      "Basic hand tools"
-    ],
-    parts:[
-      "CO2 regulator",
-      "Carbonator check valve",
-      "Carbonator pump",
-      "Carbonator tank switch"
-    ],
+    symptoms:["Drinks are flat","No carbonator sound","Low or no CO2 pressure"],
+    tools:["Pressure gauges","Leak detector","Basic hand tools"],
+    parts:["CO2 regulator","Carbonator check valve","Carbonator pump","Carbonator tank switch"],
     notes:"Target CO2 regulator setting is typically 60 PSI. Water in the CO2 line usually indicates a failed carbonator check valve. After repair, purge the CO2 line and retest carbonation.",
     steps: [
-      {
-        q:"Is the CO2 tank open and not empty?",
-        img:"CO2-Tank.jpg",
-        yes:1,
-        no:"Restore CO2 supply or replace the empty cylinder."
-      },
-      {
-        q:"Is regulator output near 60 PSI?",
-        img:"CO2-Regulator.jpg",
-        yes:2,
-        no:"Adjust regulator to about 60 PSI or replace the regulator if unstable."
-      },
-      {
-        q:"Is the carbonator pump running on demand?",
-        img:"Carbonator-Pump.jpg",
-        yes:3,
-        no:"Check carbonator pump power, overload, pressure switch, and control circuit."
-      },
-      {
-        q:"Is water backing into the CO2 line?",
-        img:"Water-In-CO2-Line.jpg",
-        yes:4,
-        no:"Check carbonator operation, CO2 supply, and downstream restrictions. Verify plain water supply and confirm the carbonator is producing properly carbonated water."
-      },
-      {
-        q:"Recommended Action",
-        img:"Carbonator-Check-Valve.jpg",
-        yes:"Replace the carbonator check valve, inspect fittings for leakage, purge the CO2 line, and retest carbonation. If water reached the regulator, inspect or replace the regulator as needed.",
-        no:"Replace the carbonator check valve, inspect fittings for leakage, purge the CO2 line, and retest carbonation. If water reached the regulator, inspect or replace the regulator as needed."
-      }
+      { q:"Is the CO2 tank open and not empty?", img:"CO2-Tank.jpg", yes:1, no:"Restore CO2 supply or replace the empty cylinder." },
+      { q:"Is regulator output near 60 PSI?", img:"CO2-Regulator.jpg", yes:2, no:"Adjust regulator to about 60 PSI or replace the regulator if unstable." },
+      { q:"Is the carbonator pump running on demand?", img:"Carbonator-Pump.jpg", yes:3, no:"Check carbonator pump power, overload, pressure switch, and control circuit." },
+      { q:"Is water backing into the CO2 line?", img:"Water-In-CO2-Line.jpg", yes:4, no:"Check carbonator operation, CO2 supply, and downstream restrictions. Verify plain water supply and confirm the carbonator is producing properly carbonated water." },
+      { q:"Recommended Action", img:"Carbonator-Check-Valve.jpg", yes:"Replace the carbonator check valve, inspect fittings for leakage, purge the CO2 line, and retest carbonation. If water reached the regulator, inspect or replace the regulator as needed.", no:"Replace the carbonator check valve, inspect fittings for leakage, purge the CO2 line, and retest carbonation. If water reached the regulator, inspect or replace the regulator as needed." }
     ]
   },
   {
@@ -231,51 +198,16 @@ const workflows = [
     issue:"Off ratio or Brix",
     severity:"Medium",
     eta:"10-15 min",
-    symptoms:[
-      "Too sweet",
-      "Too weak",
-      "Inconsistent flavor",
-      "Customer taste complaints"
-    ],
-    tools:[
-      "Brix cup",
-      "Stopwatch",
-      "Ratio chart",
-      "Pressure gauge"
-    ],
-    parts:[
-      "Syrup pump",
-      "Water regulator",
-      "Valve diffuser",
-      "Nozzle"
-    ],
+    symptoms:["Too sweet","Too weak","Inconsistent flavor","Customer taste complaints"],
+    tools:["Brix cup","Stopwatch","Ratio chart","Pressure gauge"],
+    parts:["Syrup pump","Water regulator","Valve diffuser","Nozzle"],
     notes:"Typical target Brix: sugar flavors 13.5, light/diet flavors 9.0. Recommended water pressure is usually 85-92 PSI. Always take several Brix readings after making an adjustment.",
     steps:[
-      {
-        q:"Is water pressure within 85-92 PSI?",
-        yes:1,
-        no:"Adjust the water regulator or correct the restriction, then retest pressure before adjusting Brix."
-      },
-      {
-        q:"Is the syrup box empty or tubing kinked?",
-        yes:"Replace the BIB or correct the syrup line issue, then purge product and retest Brix.",
-        no:2
-      },
-      {
-        q:"Is the syrup pump operating correctly?",
-        yes:3,
-        no:"Repair the gas supply or replace the syrup pump, then verify product flow and Brix."
-      },
-      {
-        q:"Is the valve clean?",
-        yes:4,
-        no:"Clean the nozzle, diffuser, and valve body, then retest Brix with multiple pours."
-      },
-      {
-  q:"Recommended Action",
-  yes:"Use a syrup separator and Brix cup to verify ratio. Target a 5:1 ratio for sugar beverages and 4:1 for diet/sugar-free. This typically equals about 13.5 Brix for sugar and 9.0 for diet. Adjust ratio and verify with multiple pours.",
-  no:"Use a syrup separator and Brix cup to verify ratio. Target a 5:1 ratio for sugar beverages and 4:1 for diet/sugar-free. This typically equals about 13.5 Brix for sugar and 9.0 for diet. Adjust ratio and verify with multiple pours."
-}
+      { q:"Is water pressure within 85-92 PSI?", yes:1, no:"Adjust the water regulator or correct the restriction, then retest pressure before adjusting Brix." },
+      { q:"Is the syrup box empty or tubing kinked?", yes:"Replace the BIB or correct the syrup line issue, then purge product and retest Brix.", no:2 },
+      { q:"Is the syrup pump operating correctly?", yes:3, no:"Repair the gas supply or replace the syrup pump, then verify product flow and Brix." },
+      { q:"Is the valve clean?", yes:4, no:"Clean the nozzle, diffuser, and valve body, then retest Brix with multiple pours." },
+      { q:"Recommended Action", yes:"Use a syrup separator and Brix cup to verify ratio. Target a 5:1 ratio for sugar beverages and 4:1 for diet/sugar-free. This typically equals about 13.5 Brix for sugar and 9.0 for diet. Adjust ratio and verify with multiple pours.", no:"Use a syrup separator and Brix cup to verify ratio. Target a 5:1 ratio for sugar beverages and 4:1 for diet/sugar-free. This typically equals about 13.5 Brix for sugar and 9.0 for diet. Adjust ratio and verify with multiple pours." }
     ]
   },
   {
@@ -284,194 +216,163 @@ const workflows = [
     issue:"Water in CO2 line",
     severity:"High",
     eta:"10-15 min",
-    symptoms:[
-      "Water visible in gas tubing",
-      "Weak carbonation",
-      "Regulator instability"
-    ],
-    tools:[
-      "Basic hand tools",
-      "Pressure gauge"
-    ],
-    parts:[
-      "Carbonator check valve",
-      "Regulator",
-      "Tubing"
-    ],
+    symptoms:["Water visible in gas tubing","Weak carbonation","Regulator instability"],
+    tools:["Basic hand tools","Pressure gauge"],
+    parts:["Carbonator check valve","Regulator","Tubing"],
     notes:"This usually points to a failed carbonator check valve or improper backflow protection. After repair, purge the CO2 line and verify stable regulator performance and normal carbonation.",
     steps:[
-      {
-        q:"Is there visible water in the CO2 line?",
-        img:"Water-In-CO2-Line.jpg",
-        yes:1,
-        no:"Inspect regulator and gas path for pressure instability instead."
-      },
-      {
-        q:"Has the carbonator check valve been inspected?",
-        img:"Carbonator-Check-Valve.jpg",
-        yes:2,
-        no:"Replace the carbonator check valve first, then purge the CO2 line and retest."
-      },
-      {
-        q:"Did water reach the regulator?",
-        img:"CO2-Regulator.jpg",
-        yes:"Inspect or replace the regulator if contaminated by water. After repair, purge the line and confirm normal carbonation.",
-        no:"Purge the CO2 line, verify no backflow, confirm stable regulator pressure, and retest drink carbonation."
-      }
+      { q:"Is there visible water in the CO2 line?", img:"Water-In-CO2-Line.jpg", yes:1, no:"Inspect regulator and gas path for pressure instability instead." },
+      { q:"Has the carbonator check valve been inspected?", img:"Carbonator-Check-Valve.jpg", yes:2, no:"Replace the carbonator check valve first, then purge the CO2 line and retest." },
+      { q:"Did water reach the regulator?", img:"CO2-Regulator.jpg", yes:"Inspect or replace the regulator if contaminated by water. After repair, purge the line and confirm normal carbonation.", no:"Purge the CO2 line, verify no backflow, confirm stable regulator pressure, and retest drink carbonation." }
     ]
   },
- 
-       { id:"ice-harvest-too-long", machineType:"Ice Machine", issue:"Harvest too long", severity:"High", eta:"15-25 min", symptoms:["Long harvest cycle","Slab hangs","Fault code or freeze/harvest timeout"], tools:["Thermometer","Visual inspection","Amp clamp"], parts:["Hot gas valve","Water curtain","Thermistor"], notes:"Scale and weak hot gas valve performance are common root causes.", steps:[
-        { q:"Is the evaporator or plate scaled?", yes:"Clean and descale the unit, then retest harvest.", no:1 },
-        { q:"Is the hot gas valve energizing during harvest?", yes:2, no:"Check valve coil, board output, and wiring." },
-        { q:"Does the slab release normally after hot gas starts?", yes:"Inspect timing logic and curtain/bin controls.", no:"Inspect refrigeration performance and hot gas valve operation." }
-      ]},
-      { id:"ice-freeze-too-long", machineType:"Ice Machine", issue:"Freeze too long or no harvest", severity:"High", eta:"20-30 min", symptoms:["Long freeze cycle","Slab stuck","Harvest failure"], tools:["Thermometer","Manifold gauges","Scale cleaner tools"], parts:["Water pump","Hot gas valve","Thermistor"], notes:"Most freeze faults start with airflow, water distribution, or scale issues.", steps:[
-        { q:"Is condenser clean?", yes:1, no:"Clean the condenser and restore airflow." },
-        { q:"Is water flowing evenly?", yes:2, no:"Clean the distribution tube and inspect the pump." },
-        { q:"Is harvest valve activating?", yes:3, no:"Check harvest solenoid, board output, and wiring." },
-        { q:"Still not harvesting correctly?", yes:"Check refrigeration circuit, thermistor readings, and scale buildup.", no:"Machine operating normally. Verify several cycles." }
-      ]},
-      { id:"ice-hollow-cubes", machineType:"Ice Machine", issue:"Hollow or thin cubes", severity:"Medium", eta:"10-15 min", symptoms:["Thin slab","Hollow centers","Low production"], tools:["Thermometer","Visual inspection"], parts:["Water valve","Water curtain","Thickness probe"], notes:"Thin ice usually points to water flow or freeze timing problems.", steps:[
-        { q:"Is water flow correct across the evaporator?", yes:1, no:"Clean distribution tube or correct water flow." },
-        { q:"Is freeze cycle length normal?", yes:"Check refrigeration charge, airflow, and ambient load.", no:"Adjust or inspect ice thickness control or sensor." }
-      ]},
-      { id:"frozen-no-freeze", machineType:"Frozen Beverage", issue:"Product not freezing", severity:"High", eta:"20-30 min", symptoms:["Liquid product","Warm barrel","Weak slush"], tools:["Clamp meter","Thermometer","Refrigeration gauges"], parts:["Beater motor","Fan motor","Thermistor"], notes:"Airflow issues cause many freeze complaints before sealed system faults do.", steps:[
-        { q:"Is condenser fan running?", yes:1, no:"Repair the fan or airflow issue." },
-        { q:"Is beater motor turning?", yes:2, no:"Repair drive system, motor, or coupler." },
-        { q:"Are sensors reading correctly?", yes:"Check refrigeration system performance.", no:"Replace the thermistor or faulty sensor." }
-      ]},
-      { id:"frozen-barrel-solid", machineType:"Frozen Beverage", issue:"Barrel freezing solid", severity:"High", eta:"15-20 min", symptoms:["Product too thick","Barrel locks up","Motor strain"], tools:["Thermometer","Brix cup"], parts:["Thermistor","Control board"], notes:"Incorrect Brix or sensor failure are common causes.", steps:[
-        { q:"Is product Brix within spec?", yes:1, no:"Adjust Brix ratio and retest." },
-        { q:"Is barrel temperature sensor accurate?", yes:"Inspect control board and freeze settings.", no:"Replace the thermistor or probe." }
-      ]},
-      { id:"coffee-low-flow", machineType:"Coffee / Espresso", issue:"Low water flow", severity:"Medium", eta:"10-20 min", symptoms:["Slow dispense","Weak rinse flow","Pump strain noise"], tools:["Pressure gauge","TDS meter","Basic hand tools"], parts:["Filter cartridge","Inlet solenoid","Flowmeter","Pump"], notes:"Filters and RO settings can affect both flow and drink quality.", steps:[
-        { q:"Is incoming water supply turned on and pressure adequate?", yes:1, no:"Restore site water supply and correct pressure." },
-        { q:"Is the filter or RO system restricted?", yes:"Replace filter or RO cartridges, verify blend settings, and flush the system.", no:2 },
-        { q:"Is the inlet solenoid opening during demand?", yes:3, no:"Check coil voltage, blockage, and valve condition." },
-        { q:"Is the flowmeter registering?", yes:"Inspect pump and internal restrictions.", no:"Clean or replace the flowmeter." }
-      ]
-      },
-      { id:"coffee-no-heat", machineType:"Coffee / Espresso", issue:"No heat or low brew temperature", severity:"High", eta:"15-25 min", symptoms:["Cold beverages","Ready light off","Slow recovery"], tools:["Multimeter","Thermometer"], parts:["Heating element","Hi-limit","Temperature probe","Relay"], notes:"Scale buildup and failing probes can mimic heater failure.", steps:[
-        { q:"Does the unit have proper incoming power?", yes:1, no:"Restore correct electrical supply and verify voltage." },
-        { q:"Is the hi-limit open or tripped?", yes:"Reset or replace the hi-limit after finding the root cause.", no:2 },
-        { q:"Does the heating element energize?", yes:3, no:"Check relay, wiring, and board output." },
-        { q:"Is the temperature probe reading correctly?", yes:"Inspect control logic and scale-related heating issues.", no:"Replace the faulty probe or sensor." }
-      ]
-      },
-      { id:"water-filter-replacement", machineType:"Water Filtration", issue:"Filter replacement needed", severity:"Low", eta:"5-10 min", symptoms:["Low flow","Poor taste","Service interval reached"], tools:["TDS meter","Pressure gauge"], parts:["Filter cartridge","Scale inhibitor","O-rings"], notes:"Always flush new cartridges and record date and readings.", steps:[
-        { q:"Is service interval reached or cartridge restricted?", yes:1, no:"Verify upstream water pressure and equipment demand." },
-        { q:"Are correct replacement cartridges on site?", yes:"Replace filters, flush system, and document TDS/pressure.", no:"Order correct cartridges and verify model/part numbers." }
-      ]
-      }
-  
-    ];
+  { id:"ice-harvest-too-long", machineType:"Ice Machine", issue:"Harvest too long", severity:"High", eta:"15-25 min", symptoms:["Long harvest cycle","Slab hangs","Fault code or freeze/harvest timeout"], tools:["Thermometer","Visual inspection","Amp clamp"], parts:["Hot gas valve","Water curtain","Thermistor"], notes:"Scale and weak hot gas valve performance are common root causes.", steps:[
+    { q:"Is the evaporator or plate scaled?", yes:"Clean and descale the unit, then retest harvest.", no:1 },
+    { q:"Is the hot gas valve energizing during harvest?", yes:2, no:"Check valve coil, board output, and wiring." },
+    { q:"Does the slab release normally after hot gas starts?", yes:"Inspect timing logic and curtain/bin controls.", no:"Inspect refrigeration performance and hot gas valve operation." }
+  ]},
+  { id:"ice-freeze-too-long", machineType:"Ice Machine", issue:"Freeze too long or no harvest", severity:"High", eta:"20-30 min", symptoms:["Long freeze cycle","Slab stuck","Harvest failure"], tools:["Thermometer","Manifold gauges","Scale cleaner tools"], parts:["Water pump","Hot gas valve","Thermistor"], notes:"Most freeze faults start with airflow, water distribution, or scale issues.", steps:[
+    { q:"Is condenser clean?", yes:1, no:"Clean the condenser and restore airflow." },
+    { q:"Is water flowing evenly?", yes:2, no:"Clean the distribution tube and inspect the pump." },
+    { q:"Is harvest valve activating?", yes:3, no:"Check harvest solenoid, board output, and wiring." },
+    { q:"Still not harvesting correctly?", yes:"Check refrigeration circuit, thermistor readings, and scale buildup.", no:"Machine operating normally. Verify several cycles." }
+  ]},
+  { id:"ice-hollow-cubes", machineType:"Ice Machine", issue:"Hollow or thin cubes", severity:"Medium", eta:"10-15 min", symptoms:["Thin slab","Hollow centers","Low production"], tools:["Thermometer","Visual inspection"], parts:["Water valve","Water curtain","Thickness probe"], notes:"Thin ice usually points to water flow or freeze timing problems.", steps:[
+    { q:"Is water flow correct across the evaporator?", yes:1, no:"Clean distribution tube or correct water flow." },
+    { q:"Is freeze cycle length normal?", yes:"Check refrigeration charge, airflow, and ambient load.", no:"Adjust or inspect ice thickness control or sensor." }
+  ]},
+  { id:"frozen-no-freeze", machineType:"Frozen Beverage", issue:"Product not freezing", severity:"High", eta:"20-30 min", symptoms:["Liquid product","Warm barrel","Weak slush"], tools:["Clamp meter","Thermometer","Refrigeration gauges"], parts:["Beater motor","Fan motor","Thermistor"], notes:"Airflow issues cause many freeze complaints before sealed system faults do.", steps:[
+    { q:"Is condenser fan running?", yes:1, no:"Repair the fan or airflow issue." },
+    { q:"Is beater motor turning?", yes:2, no:"Repair drive system, motor, or coupler." },
+    { q:"Are sensors reading correctly?", yes:"Check refrigeration system performance.", no:"Replace the thermistor or faulty sensor." }
+  ]},
+  { id:"frozen-barrel-solid", machineType:"Frozen Beverage", issue:"Barrel freezing solid", severity:"High", eta:"15-20 min", symptoms:["Product too thick","Barrel locks up","Motor strain"], tools:["Thermometer","Brix cup"], parts:["Thermistor","Control board"], notes:"Incorrect Brix or sensor failure are common causes.", steps:[
+    { q:"Is product Brix within spec?", yes:1, no:"Adjust Brix ratio and retest." },
+    { q:"Is barrel temperature sensor accurate?", yes:"Inspect control board and freeze settings.", no:"Replace the thermistor or probe." }
+  ]},
+  { id:"coffee-low-flow", machineType:"Coffee / Espresso", issue:"Low water flow", severity:"Medium", eta:"10-20 min", symptoms:["Slow dispense","Weak rinse flow","Pump strain noise"], tools:["Pressure gauge","TDS meter","Basic hand tools"], parts:["Filter cartridge","Inlet solenoid","Flowmeter","Pump"], notes:"Filters and RO settings can affect both flow and drink quality.", steps:[
+    { q:"Is incoming water supply turned on and pressure adequate?", yes:1, no:"Restore site water supply and correct pressure." },
+    { q:"Is the filter or RO system restricted?", yes:"Replace filter or RO cartridges, verify blend settings, and flush the system.", no:2 },
+    { q:"Is the inlet solenoid opening during demand?", yes:3, no:"Check coil voltage, blockage, and valve condition." },
+    { q:"Is the flowmeter registering?", yes:"Inspect pump and internal restrictions.", no:"Clean or replace the flowmeter." }
+  ]},
+  { id:"coffee-no-heat", machineType:"Coffee / Espresso", issue:"No heat or low brew temperature", severity:"High", eta:"15-25 min", symptoms:["Cold beverages","Ready light off","Slow recovery"], tools:["Multimeter","Thermometer"], parts:["Heating element","Hi-limit","Temperature probe","Relay"], notes:"Scale buildup and failing probes can mimic heater failure.", steps:[
+    { q:"Does the unit have proper incoming power?", yes:1, no:"Restore correct electrical supply and verify voltage." },
+    { q:"Is the hi-limit open or tripped?", yes:"Reset or replace the hi-limit after finding the root cause.", no:2 },
+    { q:"Does the heating element energize?", yes:3, no:"Check relay, wiring, and board output." },
+    { q:"Is the temperature probe reading correctly?", yes:"Inspect control logic and scale-related heating issues.", no:"Replace the faulty probe or sensor." }
+  ]},
+  { id:"water-filter-replacement", machineType:"Water Filtration", issue:"Filter replacement needed", severity:"Low", eta:"5-10 min", symptoms:["Low flow","Poor taste","Service interval reached"], tools:["TDS meter","Pressure gauge"], parts:["Filter cartridge","Scale inhibitor","O-rings"], notes:"Always flush new cartridges and record date and readings.", steps:[
+    { q:"Is service interval reached or cartridge restricted?", yes:1, no:"Verify upstream water pressure and equipment demand." },
+    { q:"Are correct replacement cartridges on site?", yes:"Replace filters, flush system, and document TDS/pressure.", no:"Order correct cartridges and verify model/part numbers." }
+  ]}
+];
 
-    const checklistItems = [
-      ["power", "Verify power to equipment"],
-      ["water", "Verify incoming water supply"],
-      ["gas", "Verify CO2 or gas supply if applicable"],
-      ["condenser", "Check and clean condenser or airflow path"],
-      ["readings", "Document pressures, temperatures, or key readings"]
-    ];
+const checklistItems = [
+  ["power", "Verify power to equipment"],
+  ["water", "Verify incoming water supply"],
+  ["gas", "Verify CO2 or gas supply if applicable"],
+  ["condenser", "Check and clean condenser or airflow path"],
+  ["readings", "Document pressures, temperatures, or key readings"]
+];
 
-    const valveData = [
-      { name:"Cornelius UF1", use:"Fountain valve", notes:"Common on Cornelius fountain heads; inspect diffuser and nozzle condition." },
-      { name:"Cornelius LEV", use:"Legacy electric valve", notes:"Check solenoid action, syrup passage cleanliness, and switch pad response." },
-      { name:"Lancer 1506", use:"Fountain valve", notes:"Verify ratio setup, nozzle/diffuser cleanliness, and water pressure." },
-      { name:"Lancer 2300 / 2310", use:"Fountain / ice beverage", notes:"Inspect lever action and syrup/water passages." }
-    ];
+const valveData = [
+  { name:"Cornelius UF1", use:"Fountain valve", notes:"Common on Cornelius fountain heads; inspect diffuser and nozzle condition." },
+  { name:"Cornelius LEV", use:"Legacy electric valve", notes:"Check solenoid action, syrup passage cleanliness, and switch pad response." },
+  { name:"Lancer 1506", use:"Fountain valve", notes:"Verify ratio setup, nozzle/diffuser cleanliness, and water pressure." },
+  { name:"Lancer 2300 / 2310", use:"Fountain / ice beverage", notes:"Inspect lever action and syrup/water passages." }
+];
 
-    const hoshizakiBeeps = [
-      { code:"1 beep repeating", meaning:"Long freeze / freeze cycle issue", action:"Check airflow, water flow, condenser cleanliness, and thermistor values." },
-      { code:"2 beeps repeating", meaning:"Back-up freeze timer / freeze issue", action:"Inspect condenser, water circuit, charge, and freeze-related sensors." },
-      { code:"3 beeps repeating", meaning:"Harvest issue", action:"Check hot gas valve operation, scale, and slab release." },
-      { code:"5 beeps repeating", meaning:"Open thermistor or sensor issue", action:"Inspect thermistor wiring and ohm out the sensor." },
-      { code:"6 beeps repeating", meaning:"Bin control / board related issue", action:"Check bin control, control board input state, and wiring." }
-    ];
+const hoshizakiBeeps = [
+  { code:"1 beep repeating", meaning:"Long freeze / freeze cycle issue", action:"Check airflow, water flow, condenser cleanliness, and thermistor values." },
+  { code:"2 beeps repeating", meaning:"Back-up freeze timer / freeze issue", action:"Inspect condenser, water circuit, charge, and freeze-related sensors." },
+  { code:"3 beeps repeating", meaning:"Harvest issue", action:"Check hot gas valve operation, scale, and slab release." },
+  { code:"5 beeps repeating", meaning:"Open thermistor or sensor issue", action:"Inspect thermistor wiring and ohm out the sensor." },
+  { code:"6 beeps repeating", meaning:"Bin control / board related issue", action:"Check bin control, control board input state, and wiring." }
+];
 
-    const manufacturerDiag = {
-      manitowoc: [
-        "Freeze too long: start with condenser cleanliness, water flow, and thickness probe behavior.",
-        "Harvest too long: inspect hot gas valve, slab release, and evaporator scale.",
-        "No water fill: verify inlet valve voltage, water pressure, and float/bin interlocks.",
-        "Thin ice: check water distribution, freeze length, and ambient load."
-      ],
-      scotsman: [
-        "Check purge valve and water quality on repeated freeze/harvest issues.",
-        "Inspect curtain, thickness sensor, and reservoir level behavior.",
-        "Review condenser airflow and head pressure on long freeze complaints.",
-        "Scale and water distribution problems are common before sealed system faults."
-      ]
-    };
+const manufacturerDiag = {
+  manitowoc: [
+    "Freeze too long: start with condenser cleanliness, water flow, and thickness probe behavior.",
+    "Harvest too long: inspect hot gas valve, slab release, and evaporator scale.",
+    "No water fill: verify inlet valve voltage, water pressure, and float/bin interlocks.",
+    "Thin ice: check water distribution, freeze length, and ambient load."
+  ],
+  scotsman: [
+    "Check purge valve and water quality on repeated freeze/harvest issues.",
+    "Inspect curtain, thickness sensor, and reservoir level behavior.",
+    "Review condenser airflow and head pressure on long freeze complaints.",
+    "Scale and water distribution problems are common before sealed system faults."
+  ]
+};
 
-    const errorCodes = [
-      { family:"Generic Ice", code:"Freeze Too Long", meaning:"Unit is not reaching proper freeze completion in time.", action:"Check condenser, airflow, water flow, scale, and refrigeration performance." },
-      { family:"Generic Ice", code:"Harvest Too Long", meaning:"Ice slab or cubes not releasing within expected time.", action:"Inspect hot gas valve, scale, curtain, and sensor logic." },
-      { family:"Frozen Beverage", code:"Barrel Temp Sensor Fault", meaning:"Controller is not receiving valid temperature input.", action:"Check probe resistance, wiring, and board connection." },
-      { family:"Coffee / Espresso", code:"Water Fill Timeout", meaning:"Machine did not detect proper fill in time.", action:"Verify water supply, filter restriction, inlet valve, and flowmeter." }
-    ];
+const errorCodes = [
+  { family:"Generic Ice", code:"Freeze Too Long", meaning:"Unit is not reaching proper freeze completion in time.", action:"Check condenser, airflow, water flow, scale, and refrigeration performance." },
+  { family:"Generic Ice", code:"Harvest Too Long", meaning:"Ice slab or cubes not releasing within expected time.", action:"Inspect hot gas valve, scale, curtain, and sensor logic." },
+  { family:"Frozen Beverage", code:"Barrel Temp Sensor Fault", meaning:"Controller is not receiving valid temperature input.", action:"Check probe resistance, wiring, and board connection." },
+  { family:"Coffee / Espresso", code:"Water Fill Timeout", meaning:"Machine did not detect proper fill in time.", action:"Verify water supply, filter restriction, inlet valve, and flowmeter." }
+];
 
-    const partsLookupRef = [
-      "Confirm exact model and serial before ordering.",
-      "Cross-check OEM part number against revision level when available.",
-      "For beverage valves, verify nozzle/diffuser/solenoid version before replacement.",
-      "For ice machines, confirm board and sensor revision compatibility."
-    ];
+const partsLookupRef = [
+  "Confirm exact model and serial before ordering.",
+  "Cross-check OEM part number against revision level when available.",
+  "For beverage valves, verify nozzle/diffuser/solenoid version before replacement.",
+  "For ice machines, confirm board and sensor revision compatibility."
+];
 
-    const state = {
-      query: '',
-      filter: 'all',
-      selectedId: workflows[0].id,
-      tab: 'workflow',
-      stepIndex: 0,
-      history: [],
-      checklist: { power:false, water:false, gas:false, condenser:false, readings:false },
-      brix: { syrup:'5', water:'1', target:'5.0' },
-      co2: { equipment:'fountain', temperature:'38', elevation:'0' },
-      iceDiag: { brand:'manitowoc', symptom:'freeze-too-long' },
-      report: {
-        techName:'', date:'', customer:'', store:'', model:'', serial:'',
-        complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
-      }
-    };
+const state = {
+  query: '',
+  filter: 'all',
+  selectedId: workflows[0].id,
+  tab: 'workflow',
+  stepIndex: 0,
+  history: [],
+  checklist: { power:false, water:false, gas:false, condenser:false, readings:false },
+  brix: { syrup:'5', water:'1', target:'5.0' },
+  co2: { equipment:'fountain', temperature:'38', elevation:'0' },
+  iceDiag: { brand:'manitowoc', symptom:'freeze-too-long' },
+  report: {
+    techName:'', date:'', customer:'', store:'', model:'', serial:'',
+    complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
+  }
+};
 
-    const tabs = [
-      ['workflow','Workflow'],
-      ['symptoms','Symptoms'],
-      ['tools','Tools'],
-      ['checklist','Checklist'],
-      ['calc','Brix Calc'],
-      ['co2','CO2 Tool'],
-      ['iceDiag','Ice Diag'],
-      ['carbonator','Carbonator'],
-      ['errorCodes','Error Codes'],
-      ['hoshizaki','Hoshizaki Beeps'],
-      ['manitowoc','Manitowoc'],
-      ['scotsman','Scotsman'],
-      ['refrig','Refrig Ref'],
-      ['filterCalc','Filter Calc'],
-      ['valveId','Valve ID'],
-      ['parts','Parts Lookup'],
-      ['notes','Notes'],
-      ['report','Report']
-    ];
+const tabs = [
+  ['workflow','Workflow'],
+  ['symptoms','Symptoms'],
+  ['tools','Tools'],
+  ['checklist','Checklist'],
+  ['calc','Brix Calc'],
+  ['co2','CO2 Tool'],
+  ['iceDiag','Ice Diag'],
+  ['carbonator','Carbonator'],
+  ['errorCodes','Error Codes'],
+  ['hoshizaki','Hoshizaki Beeps'],
+  ['manitowoc','Manitowoc'],
+  ['scotsman','Scotsman'],
+  ['refrig','Refrig Ref'],
+  ['filterCalc','Filter Calc'],
+  ['valveId','Valve ID'],
+  ['parts','Parts Lookup'],
+  ['notes','Notes'],
+  ['report','Report']
+];
 
-    function filteredWorkflows() {
-      return workflows.filter(w => {
-        const machineMatch = state.filter === 'all' || w.machineType === state.filter;
-        const q = state.query.trim().toLowerCase();
-       const text = [w.machineType, w.issue].concat(w.symptoms || []).join(' ').toLowerCase();
-        return machineMatch && (!q || text.includes(q));
-      });
-    }
+function filteredWorkflows() {
+  return workflows.filter(w => {
+    const machineMatch = state.filter === 'all' || w.machineType === state.filter;
+    const q = state.query.trim().toLowerCase();
+    const text = [w.machineType, w.issue].concat(w.symptoms || []).join(' ').toLowerCase();
+    return machineMatch && (!q || text.includes(q));
+  });
+}
 
-    function currentWorkflow() {
-      const list = filteredWorkflows();
-      return list.find(w => w.id === state.selectedId) || list[0] || workflows[0];
-    }
+function currentWorkflow() {
+  const list = filteredWorkflows();
+  return list.find(w => w.id === state.selectedId) || list[0] || workflows[0];
+}
 
-   function renderLibrary() {
+function renderLibrary() {
   const list = filteredWorkflows();
   document.getElementById('workflowItems').innerHTML = list.map(w => {
     const locked = isProWorkflow(w.id) && !isProUser;
@@ -484,176 +385,176 @@ const workflows = [
   }).join('');
 }
 
-    function renderTabs() {
-      document.getElementById('tabs').innerHTML = tabs.map(t => `
-        <button class="tab ${state.tab===t[0]?'active':''}" onclick="setTab('${t[0]}')">
-          ${t[1]}${isProTab(t[0]) ? ' <span class="pro-badge">PRO</span>' : ''}
-        </button>
-      `).join('');
-    }
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = tabs.map(t => `
+    <button class="tab ${state.tab===t[0]?'active':''}" onclick="setTab('${t[0]}')">
+      ${t[1]}${isProTab(t[0]) ? ' <span class="pro-badge">PRO</span>' : ''}
+    </button>
+  `).join('');
+}
 
-    function resetFlow() {
-      state.stepIndex = 0;
-      state.history = [];
+function resetFlow() {
+  state.stepIndex = 0;
+  state.history = [];
+  render();
+}
+
+function backFlow() {
+  const trimmed = state.history.filter(i => !i.result).slice(0, -1);
+  state.history = trimmed;
+  state.stepIndex = Math.max(trimmed.length - 1, 0);
+  if (trimmed.length === 0) state.stepIndex = 0;
+  render();
+}
+
+function answerFlow(type) {
+  const workflow = currentWorkflow();
+  const current = workflow.steps[state.stepIndex];
+  const next = current[type];
+  const log = state.history.filter(i => !i.result).concat([{ question: current.q, answer: type.toUpperCase() }]);
+  if (typeof next === 'number') {
+    state.history = log;
+    state.stepIndex = next;
+  } else {
+    state.history = log.concat([{ result: next }]);
+  }
+  render();
+}
+
+function setTab(tab) {
+  if (isProTab(tab) && !isProUser) {
+    requirePro("This diagnostic tab is part of LAT Technician Pro.");
+    return;
+  }
+  state.tab = tab;
+  render();
+}
+
+function selectWorkflow(id) {
+  if (isProWorkflow(id) && !isProUser) {
+    requirePro("This workflow is part of LAT Technician Pro.");
+    return;
+  }
+  state.selectedId = id;
+  state.stepIndex = 0;
+  state.history = [];
+  render();
+}
+
+function toggleChecklist(key) { state.checklist[key] = !state.checklist[key]; render(); }
+function updateBrix(key, value) { state.brix[key] = value; render(); }
+function updateCo2(key, value) { state.co2[key] = value; render(); }
+function updateIceDiag(key, value) { state.iceDiag[key] = value; render(); }
+function updateReport(key, value) { state.report[key] = value; }
+
+function clearReport() {
+  state.report = {
+    techName:'', date:'', customer:'', store:'', model:'', serial:'',
+    complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
+  };
+  render();
+}
+
+function getSavedReports() {
+  try {
+    return JSON.parse(localStorage.getItem('lat_saved_reports') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function setSavedReports(reports) {
+  localStorage.setItem('lat_saved_reports', JSON.stringify(reports.slice(0, 50)));
+}
+
+function saveCurrentReport() {
+  const reports = getSavedReports();
+  const snapshot = JSON.parse(JSON.stringify(state.report));
+  snapshot.id = Date.now().toString();
+  snapshot.savedAt = new Date().toLocaleString();
+  reports.unshift(snapshot);
+  setSavedReports(reports);
+  alert('Report saved on this device.');
+  render();
+}
+
+function loadSavedReport(id) {
+  const found = getSavedReports().find(r => r.id === id);
+  if (!found) return;
+  state.report = JSON.parse(JSON.stringify(found));
+  if (!Array.isArray(state.report.photos)) state.report.photos = [];
+  render();
+}
+
+function deleteSavedReport(id) {
+  if (!confirm('Delete this saved report?')) return;
+  setSavedReports(getSavedReports().filter(r => r.id !== id));
+  render();
+}
+
+function handleReportPhotos(input) {
+  const files = Array.from(input.files || []).slice(0, 4);
+  if (!files.length) return;
+  const remaining = Math.max(0, 4 - state.report.photos.length);
+  files.slice(0, remaining).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      state.report.photos.push({ name: file.name, data: e.target.result });
       render();
-    }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
 
-    function backFlow() {
-      const trimmed = state.history.filter(i => !i.result).slice(0, -1);
-      state.history = trimmed;
-      state.stepIndex = Math.max(trimmed.length - 1, 0);
-      if (trimmed.length === 0) state.stepIndex = 0;
-      render();
-    }
+function removeReportPhoto(index) {
+  state.report.photos.splice(index, 1);
+  render();
+}
 
-    function answerFlow(type) {
-      const workflow = currentWorkflow();
-      const current = workflow.steps[state.stepIndex];
-      const next = current[type];
-      const log = state.history.filter(i => !i.result).concat([{ question: current.q, answer: type.toUpperCase() }]);
-      if (typeof next === 'number') {
-        state.history = log;
-        state.stepIndex = next;
-      } else {
-        state.history = log.concat([{ result: next }]);
-      }
-      render();
-    }
-    
+function exportReport() {
+  if (!isProUser) {
+    requirePro("PDF report export is part of LAT Technician Pro.");
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const r = state.report;
+  let y = 12;
 
-    
-    function setTab(tab) {
-      if (isProTab(tab) && !isProUser) {
-        requirePro("This diagnostic tab is part of LAT Technician Pro.");
-        return;
-      }
-      state.tab = tab;
-      render();
-    }
+  function line(label, value) {
+    const text = `${label}: ${value || ''}`;
+    const lines = doc.splitTextToSize(text, 180);
+    doc.text(lines, 14, y);
+    y += (lines.length * 7);
+  }
 
-    function selectWorkflow(id) {
-      if (isProWorkflow(id) && !isProUser) {
-        requirePro("This workflow is part of LAT Technician Pro.");
-        return;
-      }
-      state.selectedId = id;
-      state.stepIndex = 0;
-      state.history = [];
-      render();
-    }
-    function toggleChecklist(key) { state.checklist[key] = !state.checklist[key]; render(); }
-    function updateBrix(key, value) { state.brix[key] = value; render(); }
-    function updateCo2(key, value) { state.co2[key] = value; render(); }
-    function updateIceDiag(key, value) { state.iceDiag[key] = value; render(); }
-    function updateReport(key, value) { state.report[key] = value; }
-    function clearReport() {
-      state.report = {
-        techName:'', date:'', customer:'', store:'', model:'', serial:'',
-        complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
-      };
-      render();
-    }
+  doc.setFontSize(16);
+  doc.text('LAT Technician Pro - Service Call Report', 14, y);
+  y += 10;
+  doc.setFontSize(11);
 
-    function getSavedReports() {
-      try {
-        return JSON.parse(localStorage.getItem('lat_saved_reports') || '[]');
-      } catch {
-        return [];
-      }
-    }
+  line('Technician', r.techName);
+  line('Date', r.date);
+  line('Customer', r.customer);
+  line('Store', r.store);
+  line('Machine Model', r.model);
+  line('Serial', r.serial);
+  line('Complaint', r.complaint);
+  line('Diagnosis', r.diagnosis);
+  line('Resolution', r.resolution);
+  line('Parts Used', r.partsUsed);
+  line('Readings / Notes', r.readings);
 
-    function setSavedReports(reports) {
-      localStorage.setItem('lat_saved_reports', JSON.stringify(reports.slice(0, 50)));
-    }
+  if (r.photos.length) {
+    y += 4;
+    doc.text('Attached photos saved in app version; image embedding can be expanded further later.', 14, y);
+  }
 
-    function saveCurrentReport() {
-      const reports = getSavedReports();
-      const snapshot = JSON.parse(JSON.stringify(state.report));
-      snapshot.id = Date.now().toString();
-      snapshot.savedAt = new Date().toLocaleString();
-      reports.unshift(snapshot);
-      setSavedReports(reports);
-      alert('Report saved on this device.');
-      render();
-    }
+  doc.save('LAT-service-report.pdf');
+}
 
-    function loadSavedReport(id) {
-      const found = getSavedReports().find(r => r.id === id);
-      if (!found) return;
-      state.report = JSON.parse(JSON.stringify(found));
-      if (!Array.isArray(state.report.photos)) state.report.photos = [];
-      render();
-    }
-
-    function deleteSavedReport(id) {
-      if (!confirm('Delete this saved report?')) return;
-      setSavedReports(getSavedReports().filter(r => r.id !== id));
-      render();
-    }
-
-    function handleReportPhotos(input) {
-      const files = Array.from(input.files || []).slice(0, 4);
-      if (!files.length) return;
-      const remaining = Math.max(0, 4 - state.report.photos.length);
-      files.slice(0, remaining).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          state.report.photos.push({ name: file.name, data: e.target.result });
-          render();
-        };
-        reader.readAsDataURL(file);
-      });
-      input.value = '';
-    }
-
-    function removeReportPhoto(index) {
-      state.report.photos.splice(index, 1);
-      render();
-    }
-
-    function exportReport() {
-      if (!isProUser) {
-        requirePro("PDF report export is part of LAT Technician Pro.");
-        return;
-      }
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const r = state.report;
-      let y = 12;
-
-      function line(label, value) {
-        const text = `${label}: ${value || ''}`;
-        const lines = doc.splitTextToSize(text, 180);
-        doc.text(lines, 14, y);
-        y += (lines.length * 7);
-      }
-
-      doc.setFontSize(16);
-      doc.text('LAT Technician Pro - Service Call Report', 14, y);
-      y += 10;
-      doc.setFontSize(11);
-
-      line('Technician', r.techName);
-      line('Date', r.date);
-      line('Customer', r.customer);
-      line('Store', r.store);
-      line('Machine Model', r.model);
-      line('Serial', r.serial);
-      line('Complaint', r.complaint);
-      line('Diagnosis', r.diagnosis);
-      line('Resolution', r.resolution);
-      line('Parts Used', r.partsUsed);
-      line('Readings / Notes', r.readings);
-
-      if (r.photos.length) {
-        y += 4;
-        doc.text('Attached photos saved in app version; image embedding can be expanded further later.', 14, y);
-      }
-
-      doc.save('LAT-service-report.pdf');
-    }
-
- function renderContent() {
+function renderContent() {
   const w = currentWorkflow();
   const finalResult = state.history.length && state.history[state.history.length - 1].result;
   const current = w.steps[state.stepIndex];
@@ -661,446 +562,446 @@ const workflows = [
   let html = '';
 
   if (state.tab === 'workflow') {
-        html = `
-          <div class="mb-3">
-            <span class="pill">${w.machineType}</span>
-            <span class="pill">${w.severity}</span>
-            <span class="pill">${w.eta}</span>
+    html = `
+      <div class="mb-3">
+        <span class="pill">${w.machineType}</span>
+        <span class="pill">${w.severity}</span>
+        <span class="pill">${w.eta}</span>
+      </div>
+      <div class="panel mb-4">
+        <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
+        <div class="progress"><div style="width:${progress}%"></div></div>
+        ${!isProUser ? `<div class="panel warn mt-4"><div class="strong">Using Free Mode</div><div class="small locked-note mt-2">Free access includes the core fountain workflows. Upgrade to Pro for ice, frozen beverage, coffee, filtration, advanced tabs, and PDF report export.</div><div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div></div>` : ''}
+        ${!finalResult ? `
+          <div class="mt-4 strong">
+            ${current.q}
+            ${current.img ? '<img src="' + current.img + '" style="max-width:220px; display:block; margin-top:12px; border-radius:10px;">' : ''}
           </div>
-          <div class="panel mb-4">
-            <div class="topbar mb-3"><div class="strong small">Guided Troubleshooting</div><div class="small muted">${progress}%</div></div>
-            <div class="progress"><div style="width:${progress}%"></div></div>
-            ${!isProUser ? `<div class="panel warn mt-4"><div class="strong">Using Free Mode</div><div class="small locked-note mt-2">Free access includes the core fountain workflows. Upgrade to Pro for ice, frozen beverage, coffee, filtration, advanced tabs, and PDF report export.</div><div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div></div>` : ''}
-            ${!finalResult ? `
-            <div class="mt-4 strong">
-  ${current.q}
-  ${current.img ? '<img src="' + current.img + '" style="max-width:220px;">' : ''}
-</div>
-              <div class="mt-4" style="display:flex;gap:12px;flex-wrap:wrap;">
-                <button class="btn btn-primary" onclick="answerFlow('yes')">Yes</button>
-                <button class="btn" onclick="answerFlow('no')">No</button>
-                <button class="btn btn-ghost" onclick="resetFlow()">Reset</button>
-                <button class="btn btn-secondary" onclick="backFlow()">Back</button>
-              </div>
-            ` : `
-              <div class="panel green mt-4">
-                <div class="strong" style="color:#15803d;">Recommended Action</div>
-                <div class="mt-2">${finalResult}</div>
-              </div>
-              <div class="mt-4"><button class="btn btn-primary" onclick="resetFlow()">Start Over</button></div>
-            `}
+          <div class="mt-4" style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="answerFlow('yes')">Yes</button>
+            <button class="btn" onclick="answerFlow('no')">No</button>
+            <button class="btn btn-ghost" onclick="resetFlow()">Reset</button>
+            <button class="btn btn-secondary" onclick="backFlow()">Back</button>
           </div>
-          <div class="panel panel-soft">
-            <div class="strong small mb-3">Decision Log</div>
-            <div class="decision-log">
-              ${state.history.length ? state.history.map(item => `
-                <div class="list-item">
-                  ${item.question ? `<div class="strong">${item.question}</div><div class="muted small mt-2">Answer: ${item.answer}</div>` : ''}
-                  ${item.result ? `<div>${item.result}</div>` : ''}
-                </div>
-              `).join('') : `<div class="muted small">No decisions yet.</div>`}
+        ` : `
+          <div class="panel green mt-4">
+            <div class="strong" style="color:#15803d;">Recommended Action</div>
+            <div class="mt-2">${finalResult}</div>
+          </div>
+          <div class="mt-4"><button class="btn btn-primary" onclick="resetFlow()">Start Over</button></div>
+        `}
+      </div>
+      <div class="panel panel-soft">
+        <div class="strong small mb-3">Decision Log</div>
+        <div class="decision-log">
+          ${state.history.length ? state.history.map(item => `
+            <div class="list-item">
+              ${item.question ? `<div class="strong">${item.question}</div><div class="muted small mt-2">Answer: ${item.answer}</div>` : ''}
+              ${item.result ? `<div>${item.result}</div>` : ''}
             </div>
-          </div>
-        `;
-      }
+          `).join('') : `<div class="muted small">No decisions yet.</div>`}
+        </div>
+      </div>
+    `;
+  }
 
-      if (state.tab === 'symptoms') {
-        html = w.symptoms.map(s => `<div class="list-item">${s}</div>`).join('');
-      }
+  if (state.tab === 'symptoms') {
+    html = w.symptoms.map(s => `<div class="list-item">${s}</div>`).join('');
+  }
 
-      if (state.tab === 'tools') {
-        html = `
-          <div class="grid calc-grid">
-            <div>
-              <div class="strong mb-3">Tools</div>
-              ${w.tools.map(t => `<div class="list-item">${t}</div>`).join('')}
-            </div>
-            <div>
-              <div class="strong mb-3">Likely Parts</div>
-              ${w.parts.map(p => `<div class="list-item">${p}</div>`).join('')}
-            </div>
-          </div>
-        `;
-      }
+  if (state.tab === 'tools') {
+    html = `
+      <div class="grid calc-grid">
+        <div>
+          <div class="strong mb-3">Tools</div>
+          ${w.tools.map(t => `<div class="list-item">${t}</div>`).join('')}
+        </div>
+        <div>
+          <div class="strong mb-3">Likely Parts</div>
+          ${w.parts.map(p => `<div class="list-item">${p}</div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
 
-           if (state.tab === 'checklist') {
-        html = checklistItems.map(([k,l]) => `
-          <label class="checkrow">
-            <input type="checkbox" ${state.checklist[k] ? 'checked' : ''} onchange="toggleChecklist('${k}')" />
-            <span>${l}</span>
-          </label>
-        `).join('');
-      }
+  if (state.tab === 'checklist') {
+    html = checklistItems.map(([k,l]) => `
+      <label class="checkrow">
+        <input type="checkbox" ${state.checklist[k] ? 'checked' : ''} onchange="toggleChecklist('${k}')" />
+        <span>${l}</span>
+      </label>
+    `).join('');
+  }
 
-      if (state.tab === 'calc') {
-        const syrup = Number(state.brix.syrup) || 0;
-        const water = Number(state.brix.water) || 0;
-        const productType = state.brix.productType || 'sugar';
-        const targetRatio = productType === 'diet' ? 4 : 5;
-        const targetBrix = productType === 'diet' ? 9.0 : 13.5;
-        const actualRatio = syrup === 0 ? 0 : water / syrup;
+  if (state.tab === 'calc') {
+    const syrup = Number(state.brix.syrup) || 0;
+    const water = Number(state.brix.water) || 0;
+    const productType = state.brix.productType || 'sugar';
+    const targetRatio = productType === 'diet' ? 4 : 5;
+    const targetBrix = productType === 'diet' ? 9.0 : 13.5;
+    const actualRatio = syrup === 0 ? 0 : water / syrup;
 
-        let status = 'Enter syrup and water values greater than 0.';
-        if (syrup > 0 && water > 0) {
-          if (Math.abs(actualRatio - targetRatio) <= 0.2) status = 'On target';
-          else if (actualRatio < targetRatio) status = 'Too strong or syrup-heavy';
-          else status = 'Too weak or water-heavy';
-        }
-
-        html = `
-          <div class="calc-grid">
-            <div class="panel">
-              <div class="strong mb-3">Brix Ratio Calculator</div>
-              <input class="field mb-3" placeholder="Syrup ounces" value="${state.brix.syrup}" oninput="updateBrix('syrup', this.value)" />
-              <input class="field mb-3" placeholder="Water ounces" value="${state.brix.water}" oninput="updateBrix('water', this.value)" />
-              <input class="field" placeholder="Target ratio denominator, for example 5.0" value="${state.brix.target}" oninput="updateBrix('target', this.value)" />
-              <div class="panel panel-soft mt-4">
-                <div><span class="strong">Actual syrup to water ratio:</span> ${actualRatio.toFixed(3)}</div>
-                <div class="mt-2"><span class="strong">Target syrup to water ratio:</span> ${targetRatio.toFixed(3)}</div>
-                <div class="mt-2"><span class="strong">Target Brix:</span> ${targetBrix}</div>
-                <div class="mt-2"><span class="strong">Status:</span> ${status}</div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="strong mb-3">Quick Field Reference</div>
-              <div class="list-item"><span class="strong">CO2 pressure:</span> 75-95 PSI common fountain starting range</div>
-              <div class="list-item"><span class="strong">Water pressure:</span> 60-80 PSI common field range</div>
-              <div class="list-item"><span class="strong">Syrup gas pressure:</span> 70-75 PSI common pump setting</div>
-              <div class="list-item"><span class="strong">Reminder:</span> Verify exact OEM specs for the machine being serviced.</div>
-            </div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'co2') {
-        const temp = Number(state.co2.temperature) || 38;
-        const elevation = Number(state.co2.elevation) || 0;
-        const equipmentMap = {
-          fountain: { label: 'Fountain Carbonator', range: '75-95 PSI', base: 90, note: 'Use OEM specs when available.' },
-          frozen: { label: 'Frozen Beverage Gas', range: '55-65 PSI', base: 60, note: 'Many frozen beverage systems use regulated gas around 60 PSI.' },
-          draft: { label: 'Draft Beverage', range: '12-14 PSI', base: 13, note: 'Serving pressure depends on line length and temperature.' },
-          nitro: { label: 'Nitro / Specialty Beverage', range: '30-40 PSI', base: 35, note: 'Nitro setups vary by manufacturer.' }
-        };
-        const entry = equipmentMap[state.co2.equipment] || equipmentMap.fountain;
-        const tempAdjust = temp > 40 ? 2 : temp < 36 ? -2 : 0;
-        const elevAdjust = elevation >= 3000 ? 2 : elevation >= 1500 ? 1 : 0;
-        const suggested = (entry.base + tempAdjust + elevAdjust).toFixed(0);
-        html = `
-          <div class="calc-grid">
-            <div class="panel">
-              <div class="strong mb-3">CO2 Pressure Reference Tool</div>
-              <select class="field mb-3" onchange="updateCo2('equipment', this.value)">
-                <option value="fountain" ${state.co2.equipment==='fountain'?'selected':''}>Fountain Carbonator</option>
-                <option value="frozen" ${state.co2.equipment==='frozen'?'selected':''}>Frozen Beverage</option>
-                <option value="draft" ${state.co2.equipment==='draft'?'selected':''}>Draft Beverage</option>
-                <option value="nitro" ${state.co2.equipment==='nitro'?'selected':''}>Nitro / Specialty Beverage</option>
-              </select>
-              <input class="field mb-3" placeholder="Beverage / cabinet temp °F" value="${state.co2.temperature}" oninput="updateCo2('temperature', this.value)" />
-              <input class="field" placeholder="Elevation in feet" value="${state.co2.elevation}" oninput="updateCo2('elevation', this.value)" />
-              <div class="panel panel-soft mt-4">
-                <div><span class="strong">Equipment:</span> ${entry.label}</div>
-                <div class="mt-2"><span class="strong">Typical range:</span> ${entry.range}</div>
-                <div class="mt-2"><span class="strong">Suggested starting point:</span> ${suggested} PSI</div>
-                <div class="mt-2"><span class="strong">Note:</span> ${entry.note}</div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="strong mb-3">Quick Field CO2 Notes</div>
-              <div class="list-item">Flat drinks can be caused by low CO2 pressure, warm product, water in the CO2 line, or a failed carbonator check valve.</div>
-              <div class="list-item">Overcarbonation can show up as excess foaming, aggressive fizz, or taste complaints.</div>
-              <div class="list-item">Always verify regulator output under actual system demand when possible.</div>
-              <div class="list-item">This tool is a field reference, not a factory spec replacement.</div>
-            </div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'iceDiag') {
-        const map = {
-          'freeze-too-long': { title:'Freeze Too Long', causes:['Dirty condenser','Restricted water flow','Scale on evaporator','Low refrigerant charge','Hot gas valve leaking'] },
-          'harvest-too-long': { title:'Harvest Too Long', causes:['Hot gas valve issue','Scale causing slab hang-up','Weak harvest assist','Improper curtain action','Thermistor / board timing issue'] },
-          'thin-ice': { title:'Thin Ice', causes:['Short freeze cycle','Water flow issue','Thickness control issue','High ambient load','Weak refrigeration performance'] },
-          'no-water-fill': { title:'No Water Fill', causes:['Water supply off','Plugged inlet screen','Failed inlet valve coil','Board not sending output','Float / sensor lockout'] },
-          'overflow': { title:'Water Overflow', causes:['Float stuck','Inlet valve leaking through','Drain restriction','Improper reservoir level control','Scale buildup'] }
-        };
-        const brands = { manitowoc:'Manitowoc', hoshizaki:'Hoshizaki', scotsman:'Scotsman', generic:'Generic Ice Machine' };
-        const entry = map[state.iceDiag.symptom] || map['freeze-too-long'];
-        html = `
-          <div class="calc-grid">
-            <div class="panel">
-              <div class="strong mb-3">Ice Machine Diagnostic Assistant</div>
-              <select class="field mb-3" onchange="updateIceDiag('brand', this.value)">
-                <option value="manitowoc" ${state.iceDiag.brand==='manitowoc'?'selected':''}>Manitowoc</option>
-                <option value="hoshizaki" ${state.iceDiag.brand==='hoshizaki'?'selected':''}>Hoshizaki</option>
-                <option value="scotsman" ${state.iceDiag.brand==='scotsman'?'selected':''}>Scotsman</option>
-                <option value="generic" ${state.iceDiag.brand==='generic'?'selected':''}>Generic Ice Machine</option>
-              </select>
-              <select class="field" onchange="updateIceDiag('symptom', this.value)">
-                <option value="freeze-too-long" ${state.iceDiag.symptom==='freeze-too-long'?'selected':''}>Freeze Too Long</option>
-                <option value="harvest-too-long" ${state.iceDiag.symptom==='harvest-too-long'?'selected':''}>Harvest Too Long</option>
-                <option value="thin-ice" ${state.iceDiag.symptom==='thin-ice'?'selected':''}>Thin Ice</option>
-                <option value="no-water-fill" ${state.iceDiag.symptom==='no-water-fill'?'selected':''}>No Water Fill</option>
-                <option value="overflow" ${state.iceDiag.symptom==='overflow'?'selected':''}>Water Overflow</option>
-              </select>
-              <div class="panel panel-soft mt-4">
-                <div><span class="strong">Brand family:</span> ${brands[state.iceDiag.brand]}</div>
-                <div class="mt-2"><span class="strong">Symptom:</span> ${entry.title}</div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="strong mb-3">Most Likely Causes</div>
-              ${entry.causes.map(c => `<div class="list-item">${c}</div>`).join('')}
-              <div class="list-item"><span class="strong">Field tip:</span> Start with airflow, water flow, scale, and sensor checks before assuming sealed system failure.</div>
-            </div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'carbonator') {
-        html = `
-          <div class="calc-grid">
-            <div class="panel">
-              <div class="strong mb-3">Carbonator Reference</div>
-              <div class="list-item">Typical carbonator related checks: CO2 supply, regulator setting, pump operation, check valve condition, and tank pressure switch.</div>
-              <div class="list-item">Water in CO2 line usually indicates failed backflow/check valve protection.</div>
-              <div class="list-item">Flat drinks after a successful pump cycle can point to diffuser, tank leak, or temperature issue.</div>
-            </div>
-            <div class="panel">
-              <div class="strong mb-3">Field Sequence</div>
-              <div class="list-item">1. Verify CO2 tank and regulator.</div>
-              <div class="list-item">2. Confirm pump runs on demand.</div>
-              <div class="list-item">3. Check for water in gas line.</div>
-              <div class="list-item">4. Verify drink carbonation at valve.</div>
-            </div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'errorCodes') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">General Error Code Reference</div>
-            ${errorCodes.map(x => `
-              <div class="list-item">
-                <div class="strong">${x.family} — ${x.code}</div>
-                <div class="mt-2"><span class="strong">Meaning:</span> ${x.meaning}</div>
-                <div class="mt-2"><span class="strong">Action:</span> ${x.action}</div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      if (state.tab === 'hoshizaki') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">Hoshizaki Beep Sequence Guide</div>
-            ${hoshizakiBeeps.map(x => `
-              <div class="list-item">
-                <div class="strong">${x.code}</div>
-                <div class="mt-2"><span class="strong">Meaning:</span> ${x.meaning}</div>
-                <div class="mt-2"><span class="strong">Recommended checks:</span> ${x.action}</div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      if (state.tab === 'manitowoc') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">Manitowoc Diagnostics</div>
-            ${manufacturerDiag.manitowoc.map(x => `<div class="list-item">${x}</div>`).join('')}
-          </div>
-        `;
-      }
-
-      if (state.tab === 'scotsman') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">Scotsman Diagnostics</div>
-            ${manufacturerDiag.scotsman.map(x => `<div class="list-item">${x}</div>`).join('')}
-          </div>
-        `;
-      }
-
-      if (state.tab === 'refrig') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">Refrigeration Quick Reference</div>
-            <div class="list-item">Check airflow and water circuit issues before assuming sealed system failure.</div>
-            <div class="list-item">Long freeze often means weak heat removal or poor refrigeration performance.</div>
-            <div class="list-item">Long harvest often points to hot gas valve, scale, or release problems.</div>
-            <div class="list-item">Document pressures, temperatures, and amp draw before and after repair.</div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'filterCalc') {
-        html = `
-          <div class="calc-grid">
-            <div class="panel">
-              <div class="strong mb-3">Filter Replacement Reference</div>
-              <div class="list-item">Record incoming pressure before and after filter replacement.</div>
-              <div class="list-item">Record TDS or blend water where applicable on RO / espresso systems.</div>
-              <div class="list-item">Flush new cartridges before returning unit to service.</div>
-            </div>
-            <div class="panel">
-              <div class="strong mb-3">Field Notes</div>
-              <div class="list-item">Match exact cartridge family and flow direction.</div>
-              <div class="list-item">Inspect O-rings, heads, manifolds, and shutoff valves during service.</div>
-              <div class="list-item">Date-mark replacements when possible.</div>
-            </div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'valveId') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">Valve Identification</div>
-            ${valveData.map(v => `
-              <div class="list-item">
-                <div class="strong">${v.name}</div>
-                <div class="mt-2"><span class="strong">Use:</span> ${v.use}</div>
-                <div class="mt-2"><span class="strong">Notes:</span> ${v.notes}</div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      if (state.tab === 'parts') {
-        html = `
-          <div class="panel">
-            <div class="strong mb-3">Parts Lookup Builder</div>
-            <input class="field mb-3" placeholder="Enter model number" />
-            <input class="field mb-3" placeholder="Enter serial number" />
-            ${partsLookupRef.map(x => `<div class="list-item">${x}</div>`).join('')}
-          </div>
-        `;
-      }
-
-      if (state.tab === 'notes') {
-        html = `
-          <div class="panel mb-4">${w.notes}</div>
-          <div class="panel panel-soft">
-            <div class="list-item">Confirm model-specific OEM specs before final adjustment.</div>
-            <div class="list-item">Water quality, pressure, and filtration affect many beverage complaints.</div>
-            <div class="list-item">Airflow and cleanliness checks should happen early on cooling-related calls.</div>
-            <div class="list-item">Document temperatures, pressures, and timing before and after the repair.</div>
-          </div>
-        `;
-      }
-
-      if (state.tab === 'report') {
-        const savedReports = getSavedReports();
-        html = `
-          <input id="reportTech" class="field mb-3" placeholder="Technician name" value="${state.report.techName}" oninput="updateReport('techName', this.value)" />
-          <input class="field mb-3" placeholder="Date" value="${state.report.date}" oninput="updateReport('date', this.value)" />
-          <input class="field mb-3" placeholder="Customer" value="${state.report.customer}" oninput="updateReport('customer', this.value)" />
-          <input class="field mb-3" placeholder="Store" value="${state.report.store}" oninput="updateReport('store', this.value)" />
-          <input class="field mb-3" placeholder="Machine model" value="${state.report.model}" oninput="updateReport('model', this.value)" />
-          <input class="field mb-3" placeholder="Serial" value="${state.report.serial}" oninput="updateReport('serial', this.value)" />
-          <textarea class="mb-3" placeholder="Complaint" oninput="updateReport('complaint', this.value)">${state.report.complaint}</textarea>
-          <textarea class="mb-3" placeholder="Diagnosis" oninput="updateReport('diagnosis', this.value)">${state.report.diagnosis}</textarea>
-          <textarea class="mb-3" placeholder="Resolution" oninput="updateReport('resolution', this.value)">${state.report.resolution}</textarea>
-          <textarea class="mb-3" placeholder="Parts used" oninput="updateReport('partsUsed', this.value)">${state.report.partsUsed}</textarea>
-          <textarea class="mb-3" placeholder="Readings / notes" oninput="updateReport('readings', this.value)">${state.report.readings}</textarea>
-
-          <div class="panel mb-4">
-            <div class="strong mb-3">Equipment Photos</div>
-            <input class="field mb-3" type="file" accept="image/*" multiple onchange="handleReportPhotos(this)" />
-            <div class="muted small mb-3">Attach up to 4 photos. They save on this device with report history.</div>
-            ${state.report.photos.length ? state.report.photos.map((p, i) => `
-              <div class="list-item">
-                <div class="strong">${p.name}</div>
-                <img src="${p.data}" alt="${p.name}" class="photo-preview" />
-                <button class="btn btn-secondary mt-3" onclick="removeReportPhoto(${i})">Remove Photo</button>
-              </div>
-            `).join('') : '<div class="muted small">No photos attached yet.</div>'}
-          </div>
-
-          <div class="panel warn mb-4">
-            <div class="strong">Pro Feature Area</div>
-            <div class="small locked-note mt-2">Saved reports remain available in Free mode. PDF download is unlocked with LAT Technician Pro.</div>
-            ${!isProUser ? `<div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div>` : ''}
-          </div>
-
-          <div style="display:flex;gap:12px;flex-wrap:wrap;" class="mb-4">
-            <button class="btn btn-primary" onclick="saveCurrentReport()">Save Report</button>
-            <button class="btn btn-primary" onclick="exportReport()">Download PDF Report</button>
-            <button class="btn btn-secondary" onclick="clearReport()">Clear Form</button>
-          </div>
-
-          <div class="panel panel-soft">
-            <div class="strong mb-3">Saved Report History</div>
-            ${savedReports.length ? savedReports.map(r => `
-              <div class="list-item">
-                <div class="strong">${r.savedAt || ''}</div>
-                <div class="muted small mt-2">${r.customer || '-'} • ${r.store || '-'} • ${r.model || '-'}</div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;" class="mt-3">
-                  <button class="btn btn-primary" onclick="loadSavedReport('${r.id}')">Load</button>
-                  <button class="btn btn-secondary" onclick="deleteSavedReport('${r.id}')">Delete</button>
-                </div>
-              </div>
-            `).join('') : '<div class="muted small">No saved reports on this device yet.</div>'}
-          </div>
-        `;
-      }
-
-        document.getElementById('content').innerHTML = html;
+    let status = 'Enter syrup and water values greater than 0.';
+    if (syrup > 0 && water > 0) {
+      if (Math.abs(actualRatio - targetRatio) <= 0.2) status = 'On target';
+      else if (actualRatio < targetRatio) status = 'Too strong or syrup-heavy';
+      else status = 'Too weak or water-heavy';
     }
 
-    function render() {
-      const visible = filteredWorkflows();
-      if (!visible.some(w => w.id === state.selectedId) && visible[0]) state.selectedId = visible[0].id;
-      renderLibrary();
-      renderTabs();
-      renderContent();
+    html = `
+      <div class="calc-grid">
+        <div class="panel">
+          <div class="strong mb-3">Brix Ratio Calculator</div>
+          <input class="field mb-3" placeholder="Syrup ounces" value="${state.brix.syrup}" oninput="updateBrix('syrup', this.value)" />
+          <input class="field mb-3" placeholder="Water ounces" value="${state.brix.water}" oninput="updateBrix('water', this.value)" />
+          <input class="field" placeholder="Target ratio denominator, for example 5.0" value="${state.brix.target}" oninput="updateBrix('target', this.value)" />
+          <div class="panel panel-soft mt-4">
+            <div><span class="strong">Actual syrup to water ratio:</span> ${actualRatio.toFixed(3)}</div>
+            <div class="mt-2"><span class="strong">Target syrup to water ratio:</span> ${targetRatio.toFixed(3)}</div>
+            <div class="mt-2"><span class="strong">Target Brix:</span> ${targetBrix}</div>
+            <div class="mt-2"><span class="strong">Status:</span> ${status}</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="strong mb-3">Quick Field Reference</div>
+          <div class="list-item"><span class="strong">CO2 pressure:</span> 75-95 PSI common fountain starting range</div>
+          <div class="list-item"><span class="strong">Water pressure:</span> 60-80 PSI common field range</div>
+          <div class="list-item"><span class="strong">Syrup gas pressure:</span> 70-75 PSI common pump setting</div>
+          <div class="list-item"><span class="strong">Reminder:</span> Verify exact OEM specs for the machine being serviced.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'co2') {
+    const temp = Number(state.co2.temperature) || 38;
+    const elevation = Number(state.co2.elevation) || 0;
+    const equipmentMap = {
+      fountain: { label: 'Fountain Carbonator', range: '75-95 PSI', base: 90, note: 'Use OEM specs when available.' },
+      frozen: { label: 'Frozen Beverage Gas', range: '55-65 PSI', base: 60, note: 'Many frozen beverage systems use regulated gas around 60 PSI.' },
+      draft: { label: 'Draft Beverage', range: '12-14 PSI', base: 13, note: 'Serving pressure depends on line length and temperature.' },
+      nitro: { label: 'Nitro / Specialty Beverage', range: '30-40 PSI', base: 35, note: 'Nitro setups vary by manufacturer.' }
+    };
+    const entry = equipmentMap[state.co2.equipment] || equipmentMap.fountain;
+    const tempAdjust = temp > 40 ? 2 : temp < 36 ? -2 : 0;
+    const elevAdjust = elevation >= 3000 ? 2 : elevation >= 1500 ? 1 : 0;
+    const suggested = (entry.base + tempAdjust + elevAdjust).toFixed(0);
+    html = `
+      <div class="calc-grid">
+        <div class="panel">
+          <div class="strong mb-3">CO2 Pressure Reference Tool</div>
+          <select class="field mb-3" onchange="updateCo2('equipment', this.value)">
+            <option value="fountain" ${state.co2.equipment==='fountain'?'selected':''}>Fountain Carbonator</option>
+            <option value="frozen" ${state.co2.equipment==='frozen'?'selected':''}>Frozen Beverage</option>
+            <option value="draft" ${state.co2.equipment==='draft'?'selected':''}>Draft Beverage</option>
+            <option value="nitro" ${state.co2.equipment==='nitro'?'selected':''}>Nitro / Specialty Beverage</option>
+          </select>
+          <input class="field mb-3" placeholder="Beverage / cabinet temp °F" value="${state.co2.temperature}" oninput="updateCo2('temperature', this.value)" />
+          <input class="field" placeholder="Elevation in feet" value="${state.co2.elevation}" oninput="updateCo2('elevation', this.value)" />
+          <div class="panel panel-soft mt-4">
+            <div><span class="strong">Equipment:</span> ${entry.label}</div>
+            <div class="mt-2"><span class="strong">Typical range:</span> ${entry.range}</div>
+            <div class="mt-2"><span class="strong">Suggested starting point:</span> ${suggested} PSI</div>
+            <div class="mt-2"><span class="strong">Note:</span> ${entry.note}</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="strong mb-3">Quick Field CO2 Notes</div>
+          <div class="list-item">Flat drinks can be caused by low CO2 pressure, warm product, water in the CO2 line, or a failed carbonator check valve.</div>
+          <div class="list-item">Overcarbonation can show up as excess foaming, aggressive fizz, or taste complaints.</div>
+          <div class="list-item">Always verify regulator output under actual system demand when possible.</div>
+          <div class="list-item">This tool is a field reference, not a factory spec replacement.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'iceDiag') {
+    const map = {
+      'freeze-too-long': { title:'Freeze Too Long', causes:['Dirty condenser','Restricted water flow','Scale on evaporator','Low refrigerant charge','Hot gas valve leaking'] },
+      'harvest-too-long': { title:'Harvest Too Long', causes:['Hot gas valve issue','Scale causing slab hang-up','Weak harvest assist','Improper curtain action','Thermistor / board timing issue'] },
+      'thin-ice': { title:'Thin Ice', causes:['Short freeze cycle','Water flow issue','Thickness control issue','High ambient load','Weak refrigeration performance'] },
+      'no-water-fill': { title:'No Water Fill', causes:['Water supply off','Plugged inlet screen','Failed inlet valve coil','Board not sending output','Float / sensor lockout'] },
+      'overflow': { title:'Water Overflow', causes:['Float stuck','Inlet valve leaking through','Drain restriction','Improper reservoir level control','Scale buildup'] }
+    };
+    const brands = { manitowoc:'Manitowoc', hoshizaki:'Hoshizaki', scotsman:'Scotsman', generic:'Generic Ice Machine' };
+    const entry = map[state.iceDiag.symptom] || map['freeze-too-long'];
+    html = `
+      <div class="calc-grid">
+        <div class="panel">
+          <div class="strong mb-3">Ice Machine Diagnostic Assistant</div>
+          <select class="field mb-3" onchange="updateIceDiag('brand', this.value)">
+            <option value="manitowoc" ${state.iceDiag.brand==='manitowoc'?'selected':''}>Manitowoc</option>
+            <option value="hoshizaki" ${state.iceDiag.brand==='hoshizaki'?'selected':''}>Hoshizaki</option>
+            <option value="scotsman" ${state.iceDiag.brand==='scotsman'?'selected':''}>Scotsman</option>
+            <option value="generic" ${state.iceDiag.brand==='generic'?'selected':''}>Generic Ice Machine</option>
+          </select>
+          <select class="field" onchange="updateIceDiag('symptom', this.value)">
+            <option value="freeze-too-long" ${state.iceDiag.symptom==='freeze-too-long'?'selected':''}>Freeze Too Long</option>
+            <option value="harvest-too-long" ${state.iceDiag.symptom==='harvest-too-long'?'selected':''}>Harvest Too Long</option>
+            <option value="thin-ice" ${state.iceDiag.symptom==='thin-ice'?'selected':''}>Thin Ice</option>
+            <option value="no-water-fill" ${state.iceDiag.symptom==='no-water-fill'?'selected':''}>No Water Fill</option>
+            <option value="overflow" ${state.iceDiag.symptom==='overflow'?'selected':''}>Water Overflow</option>
+          </select>
+          <div class="panel panel-soft mt-4">
+            <div><span class="strong">Brand family:</span> ${brands[state.iceDiag.brand]}</div>
+            <div class="mt-2"><span class="strong">Symptom:</span> ${entry.title}</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="strong mb-3">Most Likely Causes</div>
+          ${entry.causes.map(c => `<div class="list-item">${c}</div>`).join('')}
+          <div class="list-item"><span class="strong">Field tip:</span> Start with airflow, water flow, scale, and sensor checks before assuming sealed system failure.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'carbonator') {
+    html = `
+      <div class="calc-grid">
+        <div class="panel">
+          <div class="strong mb-3">Carbonator Reference</div>
+          <div class="list-item">Typical carbonator related checks: CO2 supply, regulator setting, pump operation, check valve condition, and tank pressure switch.</div>
+          <div class="list-item">Water in CO2 line usually indicates failed backflow/check valve protection.</div>
+          <div class="list-item">Flat drinks after a successful pump cycle can point to diffuser, tank leak, or temperature issue.</div>
+        </div>
+        <div class="panel">
+          <div class="strong mb-3">Field Sequence</div>
+          <div class="list-item">1. Verify CO2 tank and regulator.</div>
+          <div class="list-item">2. Confirm pump runs on demand.</div>
+          <div class="list-item">3. Check for water in gas line.</div>
+          <div class="list-item">4. Verify drink carbonation at valve.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'errorCodes') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">General Error Code Reference</div>
+        ${errorCodes.map(x => `
+          <div class="list-item">
+            <div class="strong">${x.family} — ${x.code}</div>
+            <div class="mt-2"><span class="strong">Meaning:</span> ${x.meaning}</div>
+            <div class="mt-2"><span class="strong">Action:</span> ${x.action}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  if (state.tab === 'hoshizaki') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">Hoshizaki Beep Sequence Guide</div>
+        ${hoshizakiBeeps.map(x => `
+          <div class="list-item">
+            <div class="strong">${x.code}</div>
+            <div class="mt-2"><span class="strong">Meaning:</span> ${x.meaning}</div>
+            <div class="mt-2"><span class="strong">Recommended checks:</span> ${x.action}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  if (state.tab === 'manitowoc') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">Manitowoc Diagnostics</div>
+        ${manufacturerDiag.manitowoc.map(x => `<div class="list-item">${x}</div>`).join('')}
+      </div>
+    `;
+  }
+
+  if (state.tab === 'scotsman') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">Scotsman Diagnostics</div>
+        ${manufacturerDiag.scotsman.map(x => `<div class="list-item">${x}</div>`).join('')}
+      </div>
+    `;
+  }
+
+  if (state.tab === 'refrig') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">Refrigeration Quick Reference</div>
+        <div class="list-item">Check airflow and water circuit issues before assuming sealed system failure.</div>
+        <div class="list-item">Long freeze often means weak heat removal or poor refrigeration performance.</div>
+        <div class="list-item">Long harvest often points to hot gas valve, scale, or release problems.</div>
+        <div class="list-item">Document pressures, temperatures, and amp draw before and after repair.</div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'filterCalc') {
+    html = `
+      <div class="calc-grid">
+        <div class="panel">
+          <div class="strong mb-3">Filter Replacement Reference</div>
+          <div class="list-item">Record incoming pressure before and after filter replacement.</div>
+          <div class="list-item">Record TDS or blend water where applicable on RO / espresso systems.</div>
+          <div class="list-item">Flush new cartridges before returning unit to service.</div>
+        </div>
+        <div class="panel">
+          <div class="strong mb-3">Field Notes</div>
+          <div class="list-item">Match exact cartridge family and flow direction.</div>
+          <div class="list-item">Inspect O-rings, heads, manifolds, and shutoff valves during service.</div>
+          <div class="list-item">Date-mark replacements when possible.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'valveId') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">Valve Identification</div>
+        ${valveData.map(v => `
+          <div class="list-item">
+            <div class="strong">${v.name}</div>
+            <div class="mt-2"><span class="strong">Use:</span> ${v.use}</div>
+            <div class="mt-2"><span class="strong">Notes:</span> ${v.notes}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  if (state.tab === 'parts') {
+    html = `
+      <div class="panel">
+        <div class="strong mb-3">Parts Lookup Builder</div>
+        <input class="field mb-3" placeholder="Enter model number" />
+        <input class="field mb-3" placeholder="Enter serial number" />
+        ${partsLookupRef.map(x => `<div class="list-item">${x}</div>`).join('')}
+      </div>
+    `;
+  }
+
+  if (state.tab === 'notes') {
+    html = `
+      <div class="panel mb-4">${w.notes}</div>
+      <div class="panel panel-soft">
+        <div class="list-item">Confirm model-specific OEM specs before final adjustment.</div>
+        <div class="list-item">Water quality, pressure, and filtration affect many beverage complaints.</div>
+        <div class="list-item">Airflow and cleanliness checks should happen early on cooling-related calls.</div>
+        <div class="list-item">Document temperatures, pressures, and timing before and after the repair.</div>
+      </div>
+    `;
+  }
+
+  if (state.tab === 'report') {
+    const savedReports = getSavedReports();
+    html = `
+      <input id="reportTech" class="field mb-3" placeholder="Technician name" value="${state.report.techName}" oninput="updateReport('techName', this.value)" />
+      <input class="field mb-3" placeholder="Date" value="${state.report.date}" oninput="updateReport('date', this.value)" />
+      <input class="field mb-3" placeholder="Customer" value="${state.report.customer}" oninput="updateReport('customer', this.value)" />
+      <input class="field mb-3" placeholder="Store" value="${state.report.store}" oninput="updateReport('store', this.value)" />
+      <input class="field mb-3" placeholder="Machine model" value="${state.report.model}" oninput="updateReport('model', this.value)" />
+      <input class="field mb-3" placeholder="Serial" value="${state.report.serial}" oninput="updateReport('serial', this.value)" />
+      <textarea class="mb-3" placeholder="Complaint" oninput="updateReport('complaint', this.value)">${state.report.complaint}</textarea>
+      <textarea class="mb-3" placeholder="Diagnosis" oninput="updateReport('diagnosis', this.value)">${state.report.diagnosis}</textarea>
+      <textarea class="mb-3" placeholder="Resolution" oninput="updateReport('resolution', this.value)">${state.report.resolution}</textarea>
+      <textarea class="mb-3" placeholder="Parts used" oninput="updateReport('partsUsed', this.value)">${state.report.partsUsed}</textarea>
+      <textarea class="mb-3" placeholder="Readings / notes" oninput="updateReport('readings', this.value)">${state.report.readings}</textarea>
+
+      <div class="panel mb-4">
+        <div class="strong mb-3">Equipment Photos</div>
+        <input class="field mb-3" type="file" accept="image/*" multiple onchange="handleReportPhotos(this)" />
+        <div class="muted small mb-3">Attach up to 4 photos. They save on this device with report history.</div>
+        ${state.report.photos.length ? state.report.photos.map((p, i) => `
+          <div class="list-item">
+            <div class="strong">${p.name}</div>
+            <img src="${p.data}" alt="${p.name}" class="photo-preview" />
+            <button class="btn btn-secondary mt-3" onclick="removeReportPhoto(${i})">Remove Photo</button>
+          </div>
+        `).join('') : '<div class="muted small">No photos attached yet.</div>'}
+      </div>
+
+      <div class="panel warn mb-4">
+        <div class="strong">Pro Feature Area</div>
+        <div class="small locked-note mt-2">Saved reports remain available in Free mode. PDF download is unlocked with LAT Technician Pro.</div>
+        ${!isProUser ? `<div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div>` : ''}
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;" class="mb-4">
+        <button class="btn btn-primary" onclick="saveCurrentReport()">Save Report</button>
+        <button class="btn btn-primary" onclick="exportReport()">Download PDF Report</button>
+        <button class="btn btn-secondary" onclick="clearReport()">Clear Form</button>
+      </div>
+
+      <div class="panel panel-soft">
+        <div class="strong mb-3">Saved Report History</div>
+        ${savedReports.length ? savedReports.map(r => `
+          <div class="list-item">
+            <div class="strong">${r.savedAt || ''}</div>
+            <div class="muted small mt-2">${r.customer || '-'} • ${r.store || '-'} • ${r.model || '-'}</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;" class="mt-3">
+              <button class="btn btn-primary" onclick="loadSavedReport('${r.id}')">Load</button>
+              <button class="btn btn-secondary" onclick="deleteSavedReport('${r.id}')">Delete</button>
+            </div>
+          </div>
+        `).join('') : '<div class="muted small">No saved reports on this device yet.</div>'}
+      </div>
+    `;
+  }
+
+  document.getElementById('content').innerHTML = html;
+}
+
+function render() {
+  const visible = filteredWorkflows();
+  if (!visible.some(w => w.id === state.selectedId) && visible[0]) state.selectedId = visible[0].id;
+  renderLibrary();
+  renderTabs();
+  renderContent();
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  state.query = e.target.value;
+  render();
+});
+
+document.getElementById('machineFilter').addEventListener('change', (e) => {
+  state.filter = e.target.value;
+  render();
+});
+
+let deferredInstallPrompt = null;
+
+function showInstallButton() {
+  if (document.getElementById('installAppBtn')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'installAppBtn';
+  btn.className = 'install-btn';
+  btn.textContent = 'Install App';
+
+  btn.onclick = async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      btn.remove();
+    } else {
+      alert('Use your browser menu and choose Add to Home Screen or Install App.');
     }
+  };
 
-    document.getElementById('search').addEventListener('input', (e) => {
-      state.query = e.target.value;
-      render();
-    });
+  document.body.appendChild(btn);
+}
 
-    document.getElementById('machineFilter').addEventListener('change', (e) => {
-      state.filter = e.target.value;
-      render();
-    });
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showInstallButton();
+});
 
-    let deferredInstallPrompt = null;
-
-    function showInstallButton() {
-      if (document.getElementById('installAppBtn')) return;
-
-      const btn = document.createElement('button');
-      btn.id = 'installAppBtn';
-      btn.className = 'install-btn';
-      btn.textContent = 'Install App';
-
-      btn.onclick = async () => {
-        if (deferredInstallPrompt) {
-          deferredInstallPrompt.prompt();
-          await deferredInstallPrompt.userChoice;
-          deferredInstallPrompt = null;
-          btn.remove();
-        } else {
-          alert('Use your browser menu and choose Add to Home Screen or Install App.');
-        }
-      };
-
-      document.body.appendChild(btn);
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredInstallPrompt = e;
-      showInstallButton();
-    });
-
-    render();
+render();
   </script>
 
   <script>
