@@ -76,6 +76,18 @@
     .btn-upgrade { background:#2563eb; color:#fff; border-color:#2563eb; }
     .btn-upgrade:hover { background:#1d4ed8; }
     .locked-note { color:#1e3a8a; }
+    .summary-grid { 
+  display:grid; 
+  grid-template-columns: repeat(2, minmax(0,1fr)); 
+  gap:12px; 
+}
+
+.summary-box { 
+  border:1px solid #dbe4ee; 
+  border-radius:12px; 
+  padding:12px; 
+  background:#f8fafc; 
+}
     @media (max-width: 900px) {
       .two-col, .hero-grid, .calc-grid { grid-template-columns: 1fr; }
       .title { font-size: 24px; }
@@ -543,7 +555,12 @@ const workflows = [
       "For beverage valves, verify nozzle/diffuser/solenoid version before replacement.",
       "For ice machines, confirm board and sensor revision compatibility."
     ];
-
+const estimateTemplates = {
+  turboChef: { laborHours: '4', hourlyRate: '100', tripCharge: '150', miscCharge: '100', equipment: 'TurboChef' },
+  iceMachine: { laborHours: '2', hourlyRate: '100', tripCharge: '150', miscCharge: '0', equipment: 'Ice Machine' },
+  fountain: { laborHours: '2', hourlyRate: '100', tripCharge: '150', miscCharge: '0', equipment: 'Fountain Soda' },
+  coffee: { laborHours: '2', hourlyRate: '100', tripCharge: '150', miscCharge: '0', equipment: 'Coffee / Espresso' }
+};
     const state = {
       query: '',
       filter: 'all',
@@ -555,6 +572,22 @@ const workflows = [
       brix: { syrup:'5', water:'1', target:'5.0' },
       co2: { equipment:'fountain', temperature:'38', elevation:'0' },
       iceDiag: { brand:'manitowoc', symptom:'freeze-too-long' },
+      estimate: {
+  equipment: 'TurboChef',
+  customer: '',
+  model: '',
+  serial: '',
+  laborHours: '4',
+  hourlyRate: '100',
+  tripCharge: '150',
+  miscCharge: '100',
+  taxRate: '0',
+  notes: 'If repair takes less time, bill actual hours used. For customer-ordered parts, provide order links separately.',
+  items: [
+    { name:'', partNumber:'', qty:'1', unitPrice:'' }
+  ],
+  copyStatus: ''
+},
       report: {
         techName:'', date:'', customer:'', store:'', model:'', serial:'',
         complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
@@ -567,6 +600,7 @@ const workflows = [
       ['tools','Tools'],
       ['checklist','Checklist'],
       ['calc','Brix Calc'],
+      ['estimate','Estimates'],
       ['co2','CO2 Tool'],
       ['iceDiag','Ice Diag'],
       ['carbonator','Carbonator'],
@@ -661,6 +695,242 @@ const workflows = [
     function updateBrix(key, value) { state.brix[key] = value; render(); }
     function updateCo2(key, value) { state.co2[key] = value; render(); }
     function updateIceDiag(key, value) { state.iceDiag[key] = value; render(); }
+    function updateEstimate(key, value) {
+  state.estimate[key] = value;
+}
+
+function updateEstimateItem(index, key, value) {
+  if (!state.estimate.items[index]) return;
+  state.estimate.items[index][key] = value;
+}
+
+function addEstimateItem() {
+  state.estimate.items.push({ name:'', partNumber:'', qty:'1', unitPrice:'' });
+  render();
+}
+
+function removeEstimateItem(index) {
+  if (state.estimate.items.length === 1) {
+    state.estimate.items[0] = { name:'', partNumber:'', qty:'1', unitPrice:'' };
+  } else {
+    state.estimate.items.splice(index, 1);
+  }
+  render();
+}
+
+function applyEstimateTemplate(templateKey) {
+  const template = estimateTemplates[templateKey];
+  if (!template) return;
+  state.estimate.equipment = template.equipment;
+  state.estimate.laborHours = template.laborHours;
+  state.estimate.hourlyRate = template.hourlyRate;
+  state.estimate.tripCharge = template.tripCharge;
+  state.estimate.miscCharge = template.miscCharge;
+  state.estimate.copyStatus = '';
+  render();
+}
+
+function estimateTotals() {
+  const laborHours = Number(state.estimate.laborHours) || 0;
+  const hourlyRate = Number(state.estimate.hourlyRate) || 0;
+  const tripCharge = Number(state.estimate.tripCharge) || 0;
+  const miscCharge = Number(state.estimate.miscCharge) || 0;
+  const taxRate = Number(state.estimate.taxRate) || 0;
+
+  const partsSubtotal = state.estimate.items.reduce((sum, item) => {
+    const qty = Number(item.qty) || 0;
+    const unitPrice = Number(item.unitPrice) || 0;
+    return sum + (qty * unitPrice);
+  }, 0);
+
+  const laborSubtotal = laborHours * hourlyRate;
+  const subtotal = laborSubtotal + tripCharge + miscCharge + partsSubtotal;
+  const taxAmount = partsSubtotal * (taxRate / 100);
+  const total = subtotal + taxAmount;
+
+  return { laborSubtotal, tripCharge, miscCharge, partsSubtotal, subtotal, taxAmount, total };
+}
+function buildEstimateSummary() {
+  const totals = estimateTotals();
+
+  const partLines = state.estimate.items
+    .filter(item => item.name || item.partNumber || item.unitPrice)
+    .map(item => {
+      const qty = Number(item.qty) || 0;
+      const unitPrice = Number(item.unitPrice) || 0;
+      const lineTotal = qty * unitPrice;
+      const details = [
+        item.name || 'Part',
+        item.partNumber ? `(${item.partNumber})` : '',
+        `Qty ${qty}`,
+        `@ $${unitPrice.toFixed(2)}`
+      ].filter(Boolean).join(' ');
+      return `- ${details} = $${lineTotal.toFixed(2)}`;
+    });
+
+  const lines = [
+    `LAT Estimate Summary`,
+    `Customer: ${state.estimate.customer || '-'}`,
+    `Equipment: ${state.estimate.equipment || '-'}`,
+    `Model: ${state.estimate.model || '-'}`,
+    `Serial: ${state.estimate.serial || '-'}`,
+    '',
+    `Labor: ${state.estimate.laborHours || 0} hrs x $${(Number(state.estimate.hourlyRate) || 0).toFixed(2)} = $${totals.laborSubtotal.toFixed(2)}`,
+    `Trip Charge: $${totals.tripCharge.toFixed(2)}`,
+    `Misc Charge: $${totals.miscCharge.toFixed(2)}`,
+    `Parts Subtotal: $${totals.partsSubtotal.toFixed(2)}`,
+    ...(partLines.length ? ['', 'Parts:', ...partLines] : []),
+    '',
+    `Subtotal: $${totals.subtotal.toFixed(2)}`,
+    `Tax on Parts: $${totals.taxAmount.toFixed(2)}`,
+    `Estimate Total: $${totals.total.toFixed(2)}`,
+    '',
+    `Notes: ${state.estimate.notes || '-'}`
+  ];
+
+  return lines.join('\n');
+}
+function showEstimateCopyStatus(message, isError = false) {
+  state.estimate.copyStatus = message;
+  const el = document.getElementById('estimateCopyStatus');
+  if (el) {
+    el.textContent = message;
+    el.style.color = isError ? '#b91c1c' : '#15803d';
+  }
+}
+
+function copyEstimateSummary() {
+  const summary = buildEstimateSummary();
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(summary)
+      .then(() => showEstimateCopyStatus('Estimate summary copied.'))
+      .catch(() => fallbackCopyText(summary));
+  } else {
+    fallbackCopyText(summary);
+  }
+}
+
+function fallbackCopyText(text) {
+  const area = document.createElement('textarea');
+  area.value = text;
+  area.setAttribute('readonly', 'readonly');
+  area.style.position = 'fixed';
+  area.style.left = '-9999px';
+  document.body.appendChild(area);
+  area.focus();
+  area.select();
+
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch (e) {
+    copied = false;
+  }
+
+  document.body.removeChild(area);
+
+  if (copied) {
+    showEstimateCopyStatus('Estimate summary copied.');
+  } else {
+    showEstimateCopyStatus('Copy blocked in preview. Test in browser or copy from the summary box below.', true);
+  }
+}
+
+function clearEstimate() {
+  state.estimate = {
+    equipment: 'TurboChef',
+    customer: '',
+    model: '',
+    serial: '',
+    laborHours: '4',
+    hourlyRate: '100',
+    tripCharge: '150',
+    miscCharge: '100',
+    taxRate: '0',
+    notes: 'If repair takes less time, bill actual hours used. For customer-ordered parts, provide order links separately.',
+    items: [
+      { name:'', partNumber:'', qty:'1', unitPrice:'' }
+    ],
+    copyStatus: ''
+  };
+  render();
+}
+    function exportEstimatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const totals = estimateTotals();
+  const est = state.estimate;
+
+  let y = 14;
+
+  function addLine(text, size = 11, gap = 7) {
+    doc.setFontSize(size);
+    const lines = doc.splitTextToSize(text, 180);
+    doc.text(lines, 14, y);
+    y += lines.length * gap;
+  }
+
+  function addSection(title) {
+    y += 3;
+    doc.setFontSize(13);
+    doc.text(title, 14, y);
+    y += 4;
+    doc.line(14, y, 196, y);
+    y += 6;
+  }
+
+  const parts = est.items.filter(item => item.name || item.partNumber || item.unitPrice);
+
+  doc.setFontSize(16);
+  doc.text('LAT Service Estimate', 14, y);
+  y += 10;
+
+  addLine(`Customer: ${est.customer || '-'}`);
+  addLine(`Equipment: ${est.equipment || '-'}`);
+  addLine(`Model: ${est.model || '-'}`);
+  addLine(`Serial: ${est.serial || '-'}`);
+
+  addSection('Labor & Service');
+  addLine(`Labor: ${est.laborHours || 0} hrs x $${(Number(est.hourlyRate) || 0).toFixed(2)} = $${totals.laborSubtotal.toFixed(2)}`);
+  addLine(`Trip Charge: $${totals.tripCharge.toFixed(2)}`);
+  addLine(`Misc Charge: $${totals.miscCharge.toFixed(2)}`);
+
+  addSection('Parts');
+  if (parts.length) {
+    parts.forEach(item => {
+      const qty = Number(item.qty) || 0;
+      const unitPrice = Number(item.unitPrice) || 0;
+      const lineTotal = qty * unitPrice;
+      addLine(`${item.name || 'Part'} ${item.partNumber ? '(' + item.partNumber + ')' : ''}`, 11, 6);
+      addLine(`Qty: ${qty}   Unit: $${unitPrice.toFixed(2)}   Line Total: $${lineTotal.toFixed(2)}`, 10, 6);
+      y += 2;
+    });
+  } else {
+    addLine('No parts listed.');
+  }
+
+  addLine(`Parts Subtotal: $${totals.partsSubtotal.toFixed(2)}`);
+  addLine(`Tax on Parts: $${totals.taxAmount.toFixed(2)}`);
+
+  addSection('Estimate Total');
+  addLine(`Total Estimate: $${totals.total.toFixed(2)}`, 13, 8);
+
+  addSection('Notes');
+  addLine(est.notes || '-');
+
+  addSection('Customer Approval');
+  addLine('Customer Signature: ________________________________');
+  addLine('Date: ________________________________');
+
+  y += 4;
+  addLine('*Labor is billed based on actual time on site. If repair is completed in less time, billing will be adjusted accordingly.', 9, 5);
+
+  const safeCustomer = (est.customer || 'customer').replace(/[^a-z0-9]+/gi, '_');
+  const safeModel = (est.model || 'estimate').replace(/[^a-z0-9]+/gi, '_');
+
+  doc.save(`LAT_Estimate_${safeCustomer}_${safeModel}.pdf`);
+}
     function updateReport(key, value) { state.report[key] = value; }
     function clearReport() {
       state.report = {
@@ -775,6 +1045,84 @@ const workflows = [
   const current = w.steps[state.stepIndex];
   const progress = finalResult ? 100 : Math.round(((state.stepIndex + 1) / w.steps.length) * 100);
   let html = '';
+   if (state.tab === 'estimate') {
+  const totals = estimateTotals();
+  const estimateSummary = buildEstimateSummary();
+
+  html = `
+ <div class="upgrade-actions">
+  <button class="btn btn-primary" onclick="copyEstimateSummary()">Copy Estimate Summary</button>
+  <button class="btn btn-primary" onclick="exportEstimatePDF()">Download Estimate PDF</button>
+  <button class="btn btn-secondary" onclick="render()">Refresh Totals</button>
+  <button class="btn btn-secondary" onclick="clearEstimate()">Clear Estimate</button>
+</div>
+    <div class="calc-grid mb-4">
+      <div class="panel">
+        <div class="strong mb-3">Estimate Header</div>
+        <input class="field mb-3" placeholder="Customer" value="${state.estimate.customer}" oninput="updateEstimate('customer', this.value)" />
+        <input class="field mb-3" placeholder="Equipment type" value="${state.estimate.equipment}" oninput="updateEstimate('equipment', this.value)" />
+        <input class="field mb-3" placeholder="Model" value="${state.estimate.model}" oninput="updateEstimate('model', this.value)" />
+        <input class="field" placeholder="Serial" value="${state.estimate.serial}" oninput="updateEstimate('serial', this.value)" />
+      </div>
+
+      <div class="panel">
+        <div class="strong mb-3">Labor and Charges</div>
+        <input class="field mb-3" placeholder="Labor hours" value="${state.estimate.laborHours}" oninput="updateEstimate('laborHours', this.value)" onchange="render()" onblur="render()" />
+        <input class="field mb-3" placeholder="Hourly rate" value="${state.estimate.hourlyRate}" oninput="updateEstimate('hourlyRate', this.value)" onchange="render()" onblur="render()" />
+        <input class="field mb-3" placeholder="Trip charge" value="${state.estimate.tripCharge}" oninput="updateEstimate('tripCharge', this.value)" onchange="render()" onblur="render()" />
+        <input class="field mb-3" placeholder="Misc charge" value="${state.estimate.miscCharge}" oninput="updateEstimate('miscCharge', this.value)" onchange="render()" onblur="render()" />
+        <input class="field" placeholder="Tax rate on parts %" value="${state.estimate.taxRate}" oninput="updateEstimate('taxRate', this.value)" onchange="render()" onblur="render()" />
+      </div>
+    </div>
+
+    <div class="panel mb-4">
+      <div class="topbar mb-3">
+        <div class="strong">Parts Line Items</div>
+        <button class="btn btn-primary" onclick="addEstimateItem()">Add Part</button>
+      </div>
+
+      ${state.estimate.items.map((item, index) => `
+        <div class="estimate-row">
+          <input class="field" placeholder="Part description" value="${item.name}" oninput="updateEstimateItem(${index}, 'name', this.value)" />
+          <input class="field" placeholder="Part #" value="${item.partNumber}" oninput="updateEstimateItem(${index}, 'partNumber', this.value)" />
+          <input class="field" placeholder="Qty" value="${item.qty}" oninput="updateEstimateItem(${index}, 'qty', this.value)" onchange="render()" onblur="render()" />
+          <input class="field" placeholder="Unit price" value="${item.unitPrice}" oninput="updateEstimateItem(${index}, 'unitPrice', this.value)" onchange="render()" onblur="render()" />
+          <button class="btn btn-secondary" onclick="removeEstimateItem(${index})">Remove</button>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="panel mb-4">
+      <div class="strong mb-3">Estimate Notes</div>
+      <textarea oninput="updateEstimate('notes', this.value)">${state.estimate.notes}</textarea>
+    </div>
+
+    <div class="summary-grid mb-4">
+      <div class="summary-box"><div class="small muted">Labor</div><div class="strong">$${totals.laborSubtotal.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Trip</div><div class="strong">$${totals.tripCharge.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Misc</div><div class="strong">$${totals.miscCharge.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Parts</div><div class="strong">$${totals.partsSubtotal.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Tax on Parts</div><div class="strong">$${totals.taxAmount.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Estimate Total</div><div class="estimate-total">$${totals.total.toFixed(2)}</div></div>
+    </div>
+
+    <div class="panel panel-soft">
+      <div class="strong mb-3">Actions</div>
+      <div class="upgrade-actions">
+        <button class="btn btn-primary" onclick="copyEstimateSummary()">Copy Estimate Summary</button>
+        <button class="btn btn-secondary" onclick="render()">Refresh Totals</button>
+        <button class="btn btn-secondary" onclick="clearEstimate()">Clear Estimate</button>
+      </div>
+      <div id="estimateCopyStatus" class="small mt-3" style="min-height:18px; color:#15803d;">${state.estimate.copyStatus || ''}</div>
+      <div class="muted small mt-2">Use Refresh Totals after editing numeric fields in preview. In the live browser version, copy confirmation will show here.</div>
+    </div>
+
+    <div class="panel mt-4">
+      <div class="strong mb-3">Estimate Summary Preview</div>
+      <textarea readonly>${estimateSummary}</textarea>
+    </div>
+  `;
+}
 if (state.tab === 'workflow') {
   html = `
 
