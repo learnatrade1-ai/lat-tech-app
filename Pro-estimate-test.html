@@ -790,28 +790,7 @@ function buildEstimateSummary() {
 
   return lines.join('\n');
 }
-  const lines = [
-    `LAT Estimate Summary`,
-    `Customer: ${state.estimate.customer || '-'}`,
-    `Equipment: ${state.estimate.equipment || '-'}`,
-    `Model: ${state.estimate.model || '-'}`,
-    `Serial: ${state.estimate.serial || '-'}`,
-    '',
-    `Labor: ${state.estimate.laborHours || 0} hrs x $${(Number(state.estimate.hourlyRate) || 0).toFixed(2)} = $${totals.laborSubtotal.toFixed(2)}`,
-    `Trip Charge: $${totals.tripCharge.toFixed(2)}`,
-    `Misc Charge: $${totals.miscCharge.toFixed(2)}`,
-    `Parts Subtotal: $${totals.partsSubtotal.toFixed(2)}`,
-    ...(partLines.length ? ['', 'Parts:', ...partLines] : []),
-    '',
-    `Subtotal: $${totals.subtotal.toFixed(2)}`,
-    `Tax on Parts: $${totals.taxAmount.toFixed(2)}`,
-    `Estimate Total: $${totals.total.toFixed(2)}`,
-    '',
-    `Notes: ${state.estimate.notes || '-'}`
-  ];
-
-  return lines.join('\n');
-}
+ 
 
 function showEstimateCopyStatus(message, isError = false) {
   state.estimate.copyStatus = message;
