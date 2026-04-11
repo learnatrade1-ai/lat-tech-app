@@ -855,6 +855,82 @@ function clearEstimate() {
   };
   render();
 }
+    function exportEstimatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const totals = estimateTotals();
+  const est = state.estimate;
+
+  let y = 14;
+
+  function addLine(text, size = 11, gap = 7) {
+    doc.setFontSize(size);
+    const lines = doc.splitTextToSize(text, 180);
+    doc.text(lines, 14, y);
+    y += lines.length * gap;
+  }
+
+  function addSection(title) {
+    y += 3;
+    doc.setFontSize(13);
+    doc.text(title, 14, y);
+    y += 4;
+    doc.line(14, y, 196, y);
+    y += 6;
+  }
+
+  const parts = est.items.filter(item => item.name || item.partNumber || item.unitPrice);
+
+  doc.setFontSize(16);
+  doc.text('LAT Service Estimate', 14, y);
+  y += 10;
+
+  addLine(`Customer: ${est.customer || '-'}`);
+  addLine(`Equipment: ${est.equipment || '-'}`);
+  addLine(`Model: ${est.model || '-'}`);
+  addLine(`Serial: ${est.serial || '-'}`);
+
+  addSection('Labor & Service');
+  addLine(`Labor: ${est.laborHours || 0} hrs x $${(Number(est.hourlyRate) || 0).toFixed(2)} = $${totals.laborSubtotal.toFixed(2)}`);
+  addLine(`Trip Charge: $${totals.tripCharge.toFixed(2)}`);
+  addLine(`Misc Charge: $${totals.miscCharge.toFixed(2)}`);
+
+  addSection('Parts');
+  if (parts.length) {
+    parts.forEach(item => {
+      const qty = Number(item.qty) || 0;
+      const unitPrice = Number(item.unitPrice) || 0;
+      const lineTotal = qty * unitPrice;
+      addLine(`${item.name || 'Part'} ${item.partNumber ? '(' + item.partNumber + ')' : ''}`, 11, 6);
+      addLine(`Qty: ${qty}   Unit: $${unitPrice.toFixed(2)}   Line Total: $${lineTotal.toFixed(2)}`, 10, 6);
+      y += 2;
+    });
+  } else {
+    addLine('No parts listed.');
+  }
+
+  addLine(`Parts Subtotal: $${totals.partsSubtotal.toFixed(2)}`);
+  addLine(`Tax on Parts: $${totals.taxAmount.toFixed(2)}`);
+
+  addSection('Estimate Total');
+  addLine(`Total Estimate: $${totals.total.toFixed(2)}`, 13, 8);
+
+  addSection('Notes');
+  addLine(est.notes || '-');
+
+  addSection('Customer Approval');
+  addLine('Customer Signature: ________________________________');
+  addLine('Date: ________________________________');
+
+  y += 4;
+  addLine('*Labor is billed based on actual time on site. If repair is completed in less time, billing will be adjusted accordingly.', 9, 5);
+
+  const safeCustomer = (est.customer || 'customer').replace(/[^a-z0-9]+/gi, '_');
+  const safeModel = (est.model || 'estimate').replace(/[^a-z0-9]+/gi, '_');
+
+  doc.save(`LAT_Estimate_${safeCustomer}_${safeModel}.pdf`);
+}
     function updateReport(key, value) { state.report[key] = value; }
     function clearReport() {
       state.report = {
