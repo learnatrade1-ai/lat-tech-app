@@ -753,64 +753,43 @@ function estimateTotals() {
 
 function buildEstimateSummary() {
   const totals = estimateTotals();
-
   const partLines = state.estimate.items
     .filter(item => item.name || item.partNumber || item.unitPrice)
     .map(item => {
       const qty = Number(item.qty) || 0;
       const unitPrice = Number(item.unitPrice) || 0;
       const lineTotal = qty * unitPrice;
-
-      return `${item.name || 'Part'} ${item.partNumber ? '(' + item.partNumber + ')' : ''}
-Qty: ${qty} | Unit: $${unitPrice.toFixed(2)} | Total: $${lineTotal.toFixed(2)}`;
+      const details = [
+        item.name || 'Part',
+        item.partNumber ? `(${item.partNumber})` : '',
+        `Qty ${qty}`,
+        `@ $${unitPrice.toFixed(2)}`
+      ].filter(Boolean).join(' ');
+      return `- ${details} = $${lineTotal.toFixed(2)}`;
     });
 
-  return `
-LEARN A TRADE – SERVICE ESTIMATE
----------------------------------------
+  const lines = [
+    `LAT Estimate Summary`,
+    `Customer: ${state.estimate.customer || '-'}`,
+    `Equipment: ${state.estimate.equipment || '-'}`,
+    `Model: ${state.estimate.model || '-'}`,
+    `Serial: ${state.estimate.serial || '-'}`,
+    '',
+    `Labor: ${state.estimate.laborHours || 0} hrs x $${(Number(state.estimate.hourlyRate) || 0).toFixed(2)} = $${totals.laborSubtotal.toFixed(2)}`,
+    `Trip Charge: $${totals.tripCharge.toFixed(2)}`,
+    `Misc Charge: $${totals.miscCharge.toFixed(2)}`,
+    `Parts Subtotal: $${totals.partsSubtotal.toFixed(2)}`,
+    ...(partLines.length ? ['', 'Parts:', ...partLines] : []),
+    '',
+    `Subtotal: $${totals.subtotal.toFixed(2)}`,
+    `Tax on Parts: $${totals.taxAmount.toFixed(2)}`,
+    `Estimate Total: $${totals.total.toFixed(2)}`,
+    '',
+    `Notes: ${state.estimate.notes || '-'}`
+  ];
 
-Customer: ${state.estimate.customer || '-'}
-Equipment: ${state.estimate.equipment || '-'}
-Model: ${state.estimate.model || '-'}
-Serial: ${state.estimate.serial || '-'}
-
----------------------------------------
-LABOR & SERVICE
-
-Labor: ${state.estimate.laborHours || 0} hrs @ $${(Number(state.estimate.hourlyRate) || 0).toFixed(2)}
-Labor Total: $${totals.laborSubtotal.toFixed(2)}
-
-Trip Charge: $${totals.tripCharge.toFixed(2)}
-Misc Charges: $${totals.miscCharge.toFixed(2)}
-
----------------------------------------
-PARTS
-
-${partLines.length ? partLines.join('\n\n') : 'No parts listed'}
-
-Parts Subtotal: $${totals.partsSubtotal.toFixed(2)}
-Tax on Parts: $${totals.taxAmount.toFixed(2)}
-
----------------------------------------
-TOTAL ESTIMATE: $${totals.total.toFixed(2)}
-
----------------------------------------
-NOTES
-
-${state.estimate.notes || '-'}
-
----------------------------------------
-CUSTOMER APPROVAL
-
-Customer Signature: ___________________________
-
-Date: ___________________
-
----------------------------------------
-*Labor is billed based on actual time on site. If repair is completed in less time, billing will be adjusted accordingly.
-`;
+  return lines.join('\n');
 }
-
   const lines = [
     `LAT Estimate Summary`,
     `Customer: ${state.estimate.customer || '-'}`,
