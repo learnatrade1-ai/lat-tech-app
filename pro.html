@@ -1478,8 +1478,7 @@ if (state.tab === 'workflow') {
           <textarea class="mb-3" placeholder="Parts used" oninput="updateReport('partsUsed', this.value)">${state.report.partsUsed}</textarea>
           <textarea class="mb-3" placeholder="Readings / notes" oninput="updateReport('readings', this.value)">${state.report.readings}</textarea>
 
-          <div class="panel mb-4">
-            <div class="strong mb-3">Equipment Photos</div>
+                      <div class="strong mb-3">Equipment Photos</div>
             <input class="field mb-3" type="file" accept="image/*" multiple onchange="handleReportPhotos(this)" />
             <div class="muted small mb-3">Attach up to 4 photos. They save on this device with report history.</div>
             ${state.report.photos.length ? state.report.photos.map((p, i) => `
