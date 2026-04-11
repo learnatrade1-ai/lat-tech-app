@@ -572,6 +572,22 @@ const estimateTemplates = {
       brix: { syrup:'5', water:'1', target:'5.0' },
       co2: { equipment:'fountain', temperature:'38', elevation:'0' },
       iceDiag: { brand:'manitowoc', symptom:'freeze-too-long' },
+      estimate: {
+  equipment: 'TurboChef',
+  customer: '',
+  model: '',
+  serial: '',
+  laborHours: '4',
+  hourlyRate: '100',
+  tripCharge: '150',
+  miscCharge: '100',
+  taxRate: '0',
+  notes: 'If repair takes less time, bill actual hours used. For customer-ordered parts, provide order links separately.',
+  items: [
+    { name:'', partNumber:'', qty:'1', unitPrice:'' }
+  ],
+  copyStatus: ''
+},
       report: {
         techName:'', date:'', customer:'', store:'', model:'', serial:'',
         complaint:'', diagnosis:'', resolution:'', partsUsed:'', readings:'', photos:[]
