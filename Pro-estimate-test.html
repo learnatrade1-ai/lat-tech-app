@@ -1050,17 +1050,12 @@ function clearEstimate() {
   const estimateSummary = buildEstimateSummary();
 
   html = `
-    <div class="panel mb-4">
-      <div class="strong mb-3">LAT Smart Estimate Builder</div>
-      <div class="muted small mb-3">Fill in labor, trip, misc, and parts pricing. Totals calculate automatically.</div>
-      <div class="upgrade-actions">
-        <button class="btn" onclick="applyEstimateTemplate('turboChef')">TurboChef Template</button>
-        <button class="btn" onclick="applyEstimateTemplate('iceMachine')">Ice Machine Template</button>
-        <button class="btn" onclick="applyEstimateTemplate('fountain')">Fountain Template</button>
-        <button class="btn" onclick="applyEstimateTemplate('coffee')">Coffee Template</button>
-      </div>
-    </div>
-
+  <div class="upgrade-actions">
+  <button class="btn btn-primary" onclick="copyEstimateSummary()">Copy Estimate Summary</button>
+  <button class="btn btn-primary" onclick="exportEstimatePDF()">Download Estimate PDF</button>
+  <button class="btn btn-secondary" onclick="render()">Refresh Totals</button>
+  <button class="btn btn-secondary" onclick="clearEstimate()">Clear Estimate</button>
+</div>
     <div class="calc-grid mb-4">
       <div class="panel">
         <div class="strong mb-3">Estimate Header</div>
