@@ -970,6 +970,89 @@ function clearEstimate() {
   const current = w.steps[state.stepIndex];
   const progress = finalResult ? 100 : Math.round(((state.stepIndex + 1) / w.steps.length) * 100);
   let html = '';
+   if (state.tab === 'estimate') {
+  const totals = estimateTotals();
+  const estimateSummary = buildEstimateSummary();
+
+  html = `
+    <div class="panel mb-4">
+      <div class="strong mb-3">LAT Smart Estimate Builder</div>
+      <div class="muted small mb-3">Fill in labor, trip, misc, and parts pricing. Totals calculate automatically.</div>
+      <div class="upgrade-actions">
+        <button class="btn" onclick="applyEstimateTemplate('turboChef')">TurboChef Template</button>
+        <button class="btn" onclick="applyEstimateTemplate('iceMachine')">Ice Machine Template</button>
+        <button class="btn" onclick="applyEstimateTemplate('fountain')">Fountain Template</button>
+        <button class="btn" onclick="applyEstimateTemplate('coffee')">Coffee Template</button>
+      </div>
+    </div>
+
+    <div class="calc-grid mb-4">
+      <div class="panel">
+        <div class="strong mb-3">Estimate Header</div>
+        <input class="field mb-3" placeholder="Customer" value="${state.estimate.customer}" oninput="updateEstimate('customer', this.value)" />
+        <input class="field mb-3" placeholder="Equipment type" value="${state.estimate.equipment}" oninput="updateEstimate('equipment', this.value)" />
+        <input class="field mb-3" placeholder="Model" value="${state.estimate.model}" oninput="updateEstimate('model', this.value)" />
+        <input class="field" placeholder="Serial" value="${state.estimate.serial}" oninput="updateEstimate('serial', this.value)" />
+      </div>
+
+      <div class="panel">
+        <div class="strong mb-3">Labor and Charges</div>
+        <input class="field mb-3" placeholder="Labor hours" value="${state.estimate.laborHours}" oninput="updateEstimate('laborHours', this.value)" onchange="render()" onblur="render()" />
+        <input class="field mb-3" placeholder="Hourly rate" value="${state.estimate.hourlyRate}" oninput="updateEstimate('hourlyRate', this.value)" onchange="render()" onblur="render()" />
+        <input class="field mb-3" placeholder="Trip charge" value="${state.estimate.tripCharge}" oninput="updateEstimate('tripCharge', this.value)" onchange="render()" onblur="render()" />
+        <input class="field mb-3" placeholder="Misc charge" value="${state.estimate.miscCharge}" oninput="updateEstimate('miscCharge', this.value)" onchange="render()" onblur="render()" />
+        <input class="field" placeholder="Tax rate on parts %" value="${state.estimate.taxRate}" oninput="updateEstimate('taxRate', this.value)" onchange="render()" onblur="render()" />
+      </div>
+    </div>
+
+    <div class="panel mb-4">
+      <div class="topbar mb-3">
+        <div class="strong">Parts Line Items</div>
+        <button class="btn btn-primary" onclick="addEstimateItem()">Add Part</button>
+      </div>
+
+      ${state.estimate.items.map((item, index) => `
+        <div class="estimate-row">
+          <input class="field" placeholder="Part description" value="${item.name}" oninput="updateEstimateItem(${index}, 'name', this.value)" />
+          <input class="field" placeholder="Part #" value="${item.partNumber}" oninput="updateEstimateItem(${index}, 'partNumber', this.value)" />
+          <input class="field" placeholder="Qty" value="${item.qty}" oninput="updateEstimateItem(${index}, 'qty', this.value)" onchange="render()" onblur="render()" />
+          <input class="field" placeholder="Unit price" value="${item.unitPrice}" oninput="updateEstimateItem(${index}, 'unitPrice', this.value)" onchange="render()" onblur="render()" />
+          <button class="btn btn-secondary" onclick="removeEstimateItem(${index})">Remove</button>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="panel mb-4">
+      <div class="strong mb-3">Estimate Notes</div>
+      <textarea oninput="updateEstimate('notes', this.value)">${state.estimate.notes}</textarea>
+    </div>
+
+    <div class="summary-grid mb-4">
+      <div class="summary-box"><div class="small muted">Labor</div><div class="strong">$${totals.laborSubtotal.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Trip</div><div class="strong">$${totals.tripCharge.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Misc</div><div class="strong">$${totals.miscCharge.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Parts</div><div class="strong">$${totals.partsSubtotal.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Tax on Parts</div><div class="strong">$${totals.taxAmount.toFixed(2)}</div></div>
+      <div class="summary-box"><div class="small muted">Estimate Total</div><div class="estimate-total">$${totals.total.toFixed(2)}</div></div>
+    </div>
+
+    <div class="panel panel-soft">
+      <div class="strong mb-3">Actions</div>
+      <div class="upgrade-actions">
+        <button class="btn btn-primary" onclick="copyEstimateSummary()">Copy Estimate Summary</button>
+        <button class="btn btn-secondary" onclick="render()">Refresh Totals</button>
+        <button class="btn btn-secondary" onclick="clearEstimate()">Clear Estimate</button>
+      </div>
+      <div id="estimateCopyStatus" class="small mt-3" style="min-height:18px; color:#15803d;">${state.estimate.copyStatus || ''}</div>
+      <div class="muted small mt-2">Use Refresh Totals after editing numeric fields in preview. In the live browser version, copy confirmation will show here.</div>
+    </div>
+
+    <div class="panel mt-4">
+      <div class="strong mb-3">Estimate Summary Preview</div>
+      <textarea readonly>${estimateSummary}</textarea>
+    </div>
+  `;
+}
 if (state.tab === 'workflow') {
   html = `
 
