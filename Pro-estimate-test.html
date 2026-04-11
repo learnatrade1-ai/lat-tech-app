@@ -555,7 +555,12 @@ const workflows = [
       "For beverage valves, verify nozzle/diffuser/solenoid version before replacement.",
       "For ice machines, confirm board and sensor revision compatibility."
     ];
-
+const estimateTemplates = {
+  turboChef: { laborHours: '4', hourlyRate: '100', tripCharge: '150', miscCharge: '100', equipment: 'TurboChef' },
+  iceMachine: { laborHours: '2', hourlyRate: '100', tripCharge: '150', miscCharge: '0', equipment: 'Ice Machine' },
+  fountain: { laborHours: '2', hourlyRate: '100', tripCharge: '150', miscCharge: '0', equipment: 'Fountain Soda' },
+  coffee: { laborHours: '2', hourlyRate: '100', tripCharge: '150', miscCharge: '0', equipment: 'Coffee / Espresso' }
+};
     const state = {
       query: '',
       filter: 'all',
