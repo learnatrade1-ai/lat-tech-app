@@ -750,9 +750,9 @@ function estimateTotals() {
 
   return { laborSubtotal, tripCharge, miscCharge, partsSubtotal, subtotal, taxAmount, total };
 }
-
 function buildEstimateSummary() {
   const totals = estimateTotals();
+
   const partLines = state.estimate.items
     .filter(item => item.name || item.partNumber || item.unitPrice)
     .map(item => {
@@ -790,8 +790,6 @@ function buildEstimateSummary() {
 
   return lines.join('\n');
 }
- 
-
 function showEstimateCopyStatus(message, isError = false) {
   state.estimate.copyStatus = message;
   const el = document.getElementById('estimateCopyStatus');
