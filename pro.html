@@ -127,7 +127,7 @@
 
   <script>
 const UPGRADE_URL = "https://www.learnatrade.online/unlock-lat-technician-pro-access";
-let isProUser = false;
+let isProUser = true;
 
 const proWorkflowIds = new Set([]);
 
@@ -1490,13 +1490,7 @@ if (state.tab === 'workflow') {
             `).join('') : '<div class="muted small">No photos attached yet.</div>'}
           </div>
 
-          <div class="panel warn mb-4">
-            <div class="strong">Pro Feature Area</div>
-            <div class="small locked-note mt-2">Saved reports remain available in Free mode. PDF download is unlocked with LAT Technician Pro.</div>
-            ${!isProUser ? `<div class="mt-3"><button class="btn btn-upgrade" onclick="openUpgradePage()">Unlock Pro Access</button></div>` : ''}
-          </div>
-
-          <div style="display:flex;gap:12px;flex-wrap:wrap;" class="mb-4">
+           <div style="display:flex;gap:12px;flex-wrap:wrap;" class="mb-4">
             <button class="btn btn-primary" onclick="saveCurrentReport()">Save Report</button>
             <button class="btn btn-primary" onclick="exportReport()">Download PDF Report</button>
             <button class="btn btn-secondary" onclick="clearReport()">Clear Form</button>
